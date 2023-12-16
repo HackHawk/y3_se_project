@@ -15,14 +15,14 @@ CREATE TABLE IF NOT EXISTS public.book (
   language VARCHAR NOT NULL,
   average_rating DOUBLE PRECISION NOT NULL DEFAULT 0,
   quantity BIGINT NOT NULL DEFAULT 0,
-  price MONEY NOT NULL DEFAULT 0 -- Removed the extra comma
+  price MONEY NOT NULL DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS public.customer (
   first_name VARCHAR NOT NULL,
   last_name VARCHAR NOT NULL,
   phone_number VARCHAR NOT NULL UNIQUE,
-  customer_uuid VARCHAR NOT NULL PRIMARY KEY,
+  customer_uuid UUID NOT NULL PRIMARY KEY,
   FOREIGN KEY (customer_uuid) REFERENCES "auth"."users"("id") ON DELETE CASCADE
 );
 
@@ -30,13 +30,13 @@ CREATE TABLE IF NOT EXISTS public.admin (
   first_name VARCHAR NOT NULL,
   last_name VARCHAR NOT NULL,
   phone_number VARCHAR NOT NULL UNIQUE,
-  admin_uuid VARCHAR NOT NULL PRIMARY KEY,
+  admin_uuid UUID NOT NULL PRIMARY KEY,
   FOREIGN KEY (admin_uuid) REFERENCES "auth"."users"("id") ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS public.purchases (
   book_id BIGINT NOT NULL, 
-  customer_uuid VARCHAR NOT NULL,
+  customer_uuid UUID NOT NULL,
   purchase_timestamp TIMESTAMP WITH TIME ZONE NOT NULL,
   PRIMARY KEY (book_id, customer_uuid, purchase_timestamp),
   FOREIGN KEY (book_id) REFERENCES public.book(book_id),
