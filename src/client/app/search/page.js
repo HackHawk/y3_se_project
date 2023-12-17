@@ -18,7 +18,7 @@ const defaultBooks = [
     language: "Japanese",
     synopsis:
       "This is a synopsis of Book 1. It is a brief description of the book's content.",
-    rating: "2",
+    rating: "5",
   },
   {
     title: "Book Title 2",
@@ -32,7 +32,7 @@ const defaultBooks = [
     language: "French",
     synopsis:
       "This is a synopsis of Book 2. It is a brief description of the book's content.",
-    rating: "2",
+    rating: "3",
   },
   {
     title: "Book Title 3",
@@ -46,7 +46,7 @@ const defaultBooks = [
     language: "French",
     synopsis:
       "This is a synopsis of Book 3. It is a brief description of the book's content.",
-    rating: "2",
+    rating: "4",
   },
   {
     title: "Book Title 4",
