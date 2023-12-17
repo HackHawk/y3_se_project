@@ -1,3 +1,31 @@
+-- For Database v1.1
+INSERT INTO public.books (title, amhr_title, isbn, authors, synopsis, amhr_synopsis, publisher, publication_date, is_hardcover, genre, language, average_rating, quantity, price)
+VALUES ('Pride and Prejudice', 'ትዕቢት እና ክርክር', 9780140435015, 'Jane Austen', 'A witty society novel about Elizabeth Bennet''s marriage prospects in early 19th-century England.', 'እንግሊዝ ውስጥ 19ኛው ክፍለዘመን አባት ቤኔት ሴቶች እና እድሜ ልጅ ትዕቢት እና ክርክር.', 'Penguin Classics', '1813-01-28', true, 'Classic Literature', 'English', 4.15, 15, 12.99);
+
+INSERT INTO public.books (title, amhr_title, isbn, authors, synopsis, amhr_synopsis, publisher, publication_date, is_hardcover, genre, language, average_rating, quantity, price)
+VALUES ('Project Hail Mary', 'ፕሮጀክት ድን ማርያ', 9780525622908, 'Andy Weir', 'An amnesiac astronaut wakes up on a spaceship headed for a distant star system with no memory of his mission.', 'የጠፋ አስታወስ አንድ የጠፈር አው አው የማይታወቅ ተልእኮ ጋር ወደ ርቀቅ ኮከብ ስርአት በሚያመራ አው ላይ ይነቃቃል.', 'Crown Books', '2021-05-04', false, 'Sci-Fi Thriller', 'English', 4.27, 30, 14.99);
+
+INSERT INTO public.books (title, amhr_title, isbn, authors, synopsis, amhr_synopsis, publisher, publication_date, is_hardcover, genre, language, average_rating, quantity, price)
+VALUES ('Goodnight Moon', 'ጨለማ ምሽት ጨረታ', 9780399228470, 'Margaret Wise Brown', 'A young bunny says goodnight to everything in its room before falling asleep.', 'አንድ ትንሽ ድመና አንድ አንድ ክፍል ውስጥ ያለ ሁሉም ነገርን ተባርኮ ከተኝታ በፊት ይቀመጣል.', 'HarperCollins', '1947-04-28', true, 'Children''s Literature', 'English', 4.82, 20, 9.99);
+
+INSERT INTO public.books (title, amhr_title, isbn, authors, synopsis, amhr_synopsis, publisher, publication_date, is_hardcover, genre, language, average_rating, quantity, price)
+VALUES ('The Pillars of the Earth', 'የምድር አምዶች', 9780345476765, 'Ken Follett', 'A sweeping saga about the building of a cathedral in medieval England.', 'የመካከለኛው ዘመን እንግሊዝ ውስጥ አንድ ካቴድራል ህንፃ ስለ ታሪክ አይነት ጽሁፍ.', 'Penguin Random House', '1989-03-09', true, 'Historical Fiction', 'English', 4.21, 10, 18.99);
+
+INSERT INTO public.books (title, amhr_title, authors, genre, language, price, publication_date)
+VALUES ('The Hobbit', 'የሆቢት', 'J.R.R. Tolkien', 'Fantasy', 'English', 11.25, '1937-09-21');
+
+INSERT INTO public.books (title, amhr_title, authors, genre, language, price, publication_date)
+VALUES ('Sapiens: A Brief History of Humankind', 'Sapiens', 'Yuval Noah Harari', 'Non-Fiction', 'English', 18.99, '2014-02-10');
+
+INSERT INTO public.books (title, amhr_title, authors, genre, language, price, publication_date)
+VALUES ('The Da Vinci Code', 'የዳቪንቺ ኮድ', 'Dan Brown', 'Mystery', 'English', 14.75, '2003-03-18');
+
+INSERT INTO public.books (title, amhr_title, authors, genre, language, price, publication_date)
+VALUES ('Dune', 'Dune', 'Frank Herbert', 'Science Fiction', 'English', 15.50, '1965-06-01');
+
+INSERT INTO public.books (title, amhr_title, authors, genre, language, price, publication_date)
+VALUES ('The Great Gatsby', 'ታላቅ ጋatsby', 'F. Scott Fitzgerald', 'Fiction', 'English', 12.99, '1925-04-10');
+
 -- For Database v1.0
 -- Delete all data from the purchases table
 DELETE FROM public.purchases;
