@@ -4,7 +4,7 @@ BEGIN;
 CREATE TABLE IF NOT EXISTS public.books (
   book_id BIGSERIAL PRIMARY KEY,
   title VARCHAR NOT NULL,
-  amhr_title VARCHAR NOT NULL,
+  amhr_title VARCHAR, -- NOT NULL,
   isbn BIGINT,
   authors VARCHAR NOT NULL,
   synopsis VARCHAR,
