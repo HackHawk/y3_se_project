@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS public.purchases (
   customer_uuid UUID NOT NULL,
   purchase_timestamp TIMESTAMP WITH TIME ZONE NOT NULL,
   PRIMARY KEY (book_id, customer_uuid, purchase_timestamp),
-  FOREIGN KEY (book_id) REFERENCES public.book(book_id),
+  FOREIGN KEY (book_id) REFERENCES public.books(book_id),
   FOREIGN KEY (customer_uuid) REFERENCES public.customer(customer_uuid)
 );
 
