@@ -1,17 +1,18 @@
 -- Database schema v1.1
 BEGIN;
 
-CREATE TABLE IF NOT EXISTS public.book (
+CREATE TABLE IF NOT EXISTS public.books (
   book_id BIGSERIAL PRIMARY KEY,
   title VARCHAR NOT NULL,
   amhr_title VARCHAR NOT NULL,
-  isbn BIGINT NOT NULL,
+  isbn BIGINT,
   authors VARCHAR NOT NULL,
   synopsis VARCHAR,
   amhr_synopsis VARCHAR,
   publisher VARCHAR,
   publication_date DATE,
   is_hardcover BOOLEAN,
+  genre VARCHAR,
   language VARCHAR NOT NULL,
   average_rating DOUBLE PRECISION NOT NULL DEFAULT 0,
   quantity BIGINT NOT NULL DEFAULT 0,
