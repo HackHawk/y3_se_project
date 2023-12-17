@@ -17,23 +17,26 @@ const Searchbar = ({ handleKeywordChange }) => {
   return (
     <div>
       <form onSubmit={handleSumbit}>
-        <div className="flex flex-row">
+        <div className="flex gap-2 flex-row max-w-xl items-center">
           <Input
-            isClearable
             type="text"
-            label="Search"
             variant="bordered"
             placeholder="Search Book"
-            labelPlacement={"outside-left"}
             onClear={() => setInputValue("")}
             value={inputValue}
             onChange={handleInputChange}
-            className="max-w-xs"
+            className="max-w-lg shrink"
             startContent={
               <SearchIcon className="text-black/50 mb-0.5 dark:text-white/90 text-slate-400 pointer-events-none flex-shrink-0" />
             }
           />
-          <Button type="submit">
+          <Button
+            type="submit"
+            size="lg"
+            radius="sm"
+            color="primary"
+            variant="solid"
+            className="items-center">
             <SearchIcon />
           </Button>
         </div>
@@ -41,5 +44,6 @@ const Searchbar = ({ handleKeywordChange }) => {
     </div>
   );
 };
+
 
 export default Searchbar;

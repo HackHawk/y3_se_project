@@ -3,23 +3,30 @@ import { Card, CardBody } from "@nextui-org/react";
 
 const BookCard = ({ value }) => {
   return (
-    <Card
-      isBlurred
-      className="w-auto bg-slate-50 h-auto rounded-lg pr-0 ml-5 mr-10 mb-5 border-none bg-background/60 dark:bg-default-100/50 max-w-[610px]"
-      shadow="sm"
+    <Card className="
+    hover
+    w-full
+    shadow-md
+    hover:shadow-lg
+    p-5
+    mb-4
+    bg-orange-200
+    rounded-lg
+    max-w-screen-2xl
+    border border-gray-200 dark:border-gray-900"
     >
-
-      <div className="float-left m-5">
-        <p>BT</p>
+      <div className="flex justify-center items-center m-5">
       </div>
-      <h2 className="">{value.title}</h2>
-      <p>
-        by {value.author} | Date: {value.publication_date} | ISBN: {value.ISBN} | {value.genre}
-      </p>
-      <p>Rating: {value.rating}</p>
-
-      {/* Find out the meaning of this code */}
-      <p>{Array.from({ length: value.rating }, () => "⭐").join("")}</p>
+      <div>
+        <h2 className="text-xl font-semibold mb-2">{value.title}</h2>
+        <p className="text-base text-gray-500 dark:text-gray-400">
+          by {value.author} | Date: {value.publication_date} | ISBN: {value.ISBN} | {value.genre}
+        </p>
+        <p className="text-base font-italic">Rating: {value.rating}</p>
+        <span className="ml-2 text-yellow-500 dark:text-yellow-300">
+          {"⭐".repeat(value.rating)}
+        </span>
+      </div>
     </Card>
   );
 };

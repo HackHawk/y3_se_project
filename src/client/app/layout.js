@@ -11,11 +11,17 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className='light'>
-      <body ><Providers>
-        <DisplayNavbar />
-      {children}
-        </Providers></body>
+    <html lang="en" className="light">
+      <body >
+        <Providers >
+          <div className="mx-auto max-w-4xl">
+            <DisplayNavbar />
+            {children}
+          </div>
+        </Providers>
+      </body>
     </html>
-  )
+
+  );
 }
+

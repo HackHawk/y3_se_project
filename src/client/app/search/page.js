@@ -3,7 +3,6 @@
 import BookCard from "@/components/BookCard/BookCard";
 import DisplayPagination from "@/components/Pagination/Pagination";
 import Searchbar from "@/components/Searchbar/Searchbar";
-import Sidebar from "@/components/Sidebar/Sidebar";
 import { useEffect, useState } from "react";
 
 const defaultBooks = [
@@ -149,9 +148,6 @@ const defaultBooks = [
   },
 ];
 
-
-
-
 export default function page() {
   // const [books, setBooks] = useState([]);
 
@@ -201,34 +197,29 @@ export default function page() {
     setKeywordFilter(word);
   }
 
-  // useEffect(() => {
-  //   fetch("http://localhost:3000")
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       setBooks(data);
-  //     });
-  // }, []);
-
   return (
     <>
-      <Sidebar handleGenreChange={handleGenreChange} />
+      <div className=" max-w-flex flex-col max-w-4xl p-5 gap-5 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md">
+        <Searchbar handleKeywordChange={handleKeywordChange} />
 
-      <Searchbar handleKeywordChange={handleKeywordChange} />
+        <p className="text-base font-semibold p-5 text-gray-700 dark:text-gray-200">
+          Books Found: {filteredBooks.length}
+        </p>
 
-      <p>Books Found: {filteredBooks.length}</p>
+        {/* Books List Display */}
+        <div className="mt-4 justify-center">{renderTableData()}</div>
 
-      {/* Books List Display */}
-      <div className=" bg-orange-400">{renderTableData()}</div>
-
-      {/* Display Pagination */}
-      {filteredBooks.length >= 1 && (
-        <DisplayPagination
-          totalItems={filteredBooks.length}
-          itemsPerPage={defaultPageSize}
-          currentPage={currentPage}
-          onPageChange={onPageChange}
-        />
-      )}
+        {/* Display Pagination */}
+        {filteredBooks.length >= 1 && (
+          <DisplayPagination
+            totalItems={filteredBooks.length}
+            itemsPerPage={defaultPageSize}
+            currentPage={currentPage}
+            onPageChange={onPageChange}
+          />
+        )}
+      </div>
     </>
+
   );
 }

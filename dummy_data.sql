@@ -26,6 +26,7 @@ VALUES ('Dune', 'Dune', 'Frank Herbert', 'Science Fiction', 'English', 15.50, '1
 INSERT INTO public.books (title, amhr_title, authors, genre, language, price, publication_date)
 VALUES ('The Great Gatsby', 'ታላቅ ጋatsby', 'F. Scott Fitzgerald', 'Fiction', 'English', 12.99, '1925-04-10');
 
+
 -- For Database v1.0
 -- Delete all data from the purchases table
 DELETE FROM public.purchases;

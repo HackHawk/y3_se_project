@@ -22,29 +22,12 @@ const DisplayNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <Navbar onMenuOpenChange={setIsMenuOpen}>
+    <Navbar onMenuOpenChange={setIsMenuOpen} className="max-w-4xl bg-amber-700/50 rounded flex items-center">
       <NavbarContent>
-        <NavbarBrand>
-          <p className="font-bold text-inherit">Book Store</p>
+        <NavbarBrand className="flex flex-row gap-2">
+          <img src="Eneho_books_logo.png" alt="Bookstore logo"/>
+          <p className="font-bold text-xl">እነሆ መጻሕፍት</p>
         </NavbarBrand>
-      </NavbarContent>
-
-      <NavbarContent className="hidden sm:flex gap-4">
-        <NavbarItem>
-          <Link color="foreground" href="#">
-            PlaceHolder 1
-          </Link>
-        </NavbarItem>
-        <NavbarItem isActive>
-          <Link href="#" aria-current="page">
-            PlaceHolder 2
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link color="foreground" href="#">
-            PlaceHolder 3
-          </Link>
-        </NavbarItem>
       </NavbarContent>
 
       <div className="flex flex-row gap-5">
@@ -67,9 +50,9 @@ const DisplayNavbar = () => {
                 as="button"
                 className="transition-transform"
                 color="secondary"
-                name="Jason Hughes"
+                name=""
                 size="sm"
-                src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+                src=""
               />
             </DropdownTrigger>
             <DropdownMenu aria-label="Profile Actions" variant="flat">
