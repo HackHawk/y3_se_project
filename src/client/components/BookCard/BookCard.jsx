@@ -1,11 +1,17 @@
-import React from "react";
 import { Card } from "@nextui-org/react";
+import Image from "next/image";
 import StarIcon from "../Icons/StarIcon";
 import CoverPage from "../CoverPage/CoverPage";
 
 const BookCard = ({ value }) => {
+  let src;
+  if (value.cover_page) {
+    src = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/coverpages/${value.cover_page[0]}`;
+  }
+
   return (
-    <Card className="
+    <Card
+    className="
     hover
     w-full
     shadow-md
@@ -20,7 +26,7 @@ const BookCard = ({ value }) => {
       <div className="flex flex-row justify-normal items-center">
         <div className="flex justify-center items-center m-5">
           {/* Specify the image url by using the {imageUrl} prop*/}
-          <CoverPage />
+          <CoverPage imageUrl={src}/>
         </div>
         <div>
           <h2 className="text-xl font-semibold mb-2">{value.title}</h2>
@@ -30,7 +36,7 @@ const BookCard = ({ value }) => {
           <p className="text-base font-italic">
             Rating: {value.rating > 0 && (
               <span className="text-yellow-500 dark:text-yellow-300 flex items-center">
-                {Array.from({ length: value.rating }).map((_, index) => (
+                {Array.from({ length: value.average_rating }).map((_, index) => (
                   <StarIcon key={index} />
                 ))}
               </span>
@@ -39,7 +45,6 @@ const BookCard = ({ value }) => {
         </div>
       </div>
     </Card>
-
   );
 };
 
