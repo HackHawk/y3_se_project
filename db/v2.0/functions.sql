@@ -1,4 +1,5 @@
 -- =============== Stored functions v2.0 ============================================================ 
+-- TODO create is_deleted flag compliant crud functions for books relation
 
 -- ================================================================================================================ 
 -- Delete book function 
@@ -56,17 +57,36 @@ END;
 $$;
 
 -- ================================================================================================================ 
--- Delete customer function
+--  Book purchase procedure
 -- ================================================================================================================
 
-CREATE OR REPLACE FUNCTION delete_customer(customer_id UUID)
-RETURNS VOID
+-- Assumes that the customer UUID and book_id are valid
+CREATE OR REPLACE FUNCTION buy_books(customer_id UUID, book_id BIGINT, quantity BIGINT)
+RETURNS BOOLEAN
 LANGUAGE plpgsql
 AS $$
-BEGIN 
-    -- Delete the customer from auth.users
-    DELETE FROM auth.users WHERE id = customer_id;
-    -- Since the customer relation was created with 'ON DELETE CASCADE' the custoemr will also be automatically deleted
+BEGIN
+
+  -- Check whether quantity is less than 1
+  IF (buy_books.quantity < 1 OR buy_books.quantity = NULL) THEN 
+    RAISE EXCEPTION 'Invalid quantity. Quantity of books inserted is less than 1 or is NULL.';
+  END IF;
+
+  -- Check for sufficient quantity
+  IF ((SELECT quantity FROM books WHERE books.book_id = buy_books.book_id) < quantity) THEN
+    RAISE EXCEPTION 'Insufficient book quantity available.';
+  END IF;
+
+  -- Update quantity in books table
+  UPDATE books
+  SET quantity = books.quantity - buy_books.quantity
+  WHERE books.book_id = buy_books.book_id;
+
+  -- Insert purchase record
+  INSERT INTO purchases (customer_id, book_id, amount)
+  VALUES (buy_books.customer_id, buy_books.book_id, (SELECT price FROM books WHERE book_id = buy_books.book_id) * quantity);
+
+  RETURN TRUE;  -- Indicate successful purchase
 END;
-$$;
+$$
 
