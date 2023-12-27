@@ -17,7 +17,8 @@ DROP TABLE public.genres CASCADE;
 -- ================================================================================================================
 
 DROP FUNCTION delete_book(BIGINT);
-DROP FUNCTION delete_customer(UUID);
+DROP FUNCTION retrieve_books(TEXT, BIGINT, BIGINT, TEXT);
+DROP FUNCTION buy_books(UUID, BIGINT, BIGINT);
 
 -- ================================================================================================================ 
 -- Dropping triggers
@@ -25,5 +26,6 @@ DROP FUNCTION delete_customer(UUID);
 
 DROP TRIGGER IF EXISTS create_customer_trigger ON auth.users;
 DROP FUNCTION IF EXISTS create_customer();
+
 --
 
