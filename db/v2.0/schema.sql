@@ -32,7 +32,7 @@ CREATE TABLE
     addition_tmstmp TIMESTAMPTZ DEFAULT NOW () NOT NULL,
     is_deleted BOOLEAN DEFAULT FALSE,
     cover_page_urls TEXT [],
-    FOREIGN KEY (genre) REFERENCES PUBLIC.genres (genre_name)
+    FOREIGN KEY (genre) REFERENCES PUBLIC.genres (genre_name) ON UPDATE CASCADE ON DELETE SET NULL
   );
 
 ALTER TABLE PUBLIC.books ENABLE ROW LEVEL SECURITY;
@@ -40,7 +40,7 @@ ALTER TABLE PUBLIC.books ENABLE ROW LEVEL SECURITY;
 CREATE TABLE
   IF NOT EXISTS PUBLIC.prioritized_books (
     book_id BIGINT PRIMARY KEY,
-    FOREIGN KEY (book_id) REFERENCES PUBLIC.books (book_id) ON DELETE CASCADE
+    FOREIGN KEY (book_id) REFERENCES PUBLIC.books (book_id) ON UPDATE CASCADE ON DELETE CASCADE
   );
 
 ALTER TABLE PUBLIC.prioritized_books ENABLE ROW LEVEL SECURITY;
@@ -95,8 +95,8 @@ CREATE TABLE
     purchase_timestamp TIMESTAMPTZ DEFAULT NOW () NOT NULL,
     amount MONEY NOT NULL,
     PRIMARY KEY (customer_id, book_id, purchase_timestamp),
-    FOREIGN KEY (customer_id) REFERENCES PUBLIC.customers (customer_id) ON DELETE SET NULL,
-    FOREIGN KEY (book_id) REFERENCES PUBLIC.books (book_id)
+    FOREIGN KEY (customer_id) REFERENCES PUBLIC.customers (customer_id) ON UPDATE CASCADE ON DELETE SET NULL,
+    FOREIGN KEY (book_id) REFERENCES PUBLIC.books (book_id) ON UPDATE CASCADE -- Since deletion is performed using the delete_book() function the on delete condition is not necessary
   );
 
 ALTER TABLE PUBLIC.purchases ENABLE ROW LEVEL SECURITY;

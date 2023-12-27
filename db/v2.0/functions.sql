@@ -50,3 +50,15 @@ BEGIN
     WHERE book_id = book_id_param;
 END;
 $$;
+
+CREATE OR REPLACE FUNCTION delete_customer(customer_id UUID)
+RETURNS VOID
+LANGUAGE plpgsql
+AS $$
+BEGIN 
+    -- Delete the customer from auth.users
+    DELETE FROM auth.users WHERE id = customer_id;
+    -- Since the customer relation was created with 'ON DELETE CASCADE' the custoemr will also be automatically deleted
+END;
+$$;
+
