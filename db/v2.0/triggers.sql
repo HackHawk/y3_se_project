@@ -18,23 +18,25 @@ RETURNS TRIGGER
 LANGUAGE plpgsql
 AS $$
 BEGIN
-  -- Extract the fields from the raw_user_metadata JSON in auth.users
-  -- and insert into customers
-  INSERT INTO customers(customer_id, last_name, first_name)
-  SELECT NEW.id,
-         (SELECT (raw_user_meta_data ->> 'last_name')
-          FROM auth.users
-          WHERE user_id = NEW.id)::TEXT,
-         (SELECT (raw_user_meta_data ->> 'first_name')
-          FROM auth.users
-          WHERE user_id = NEW.id)::TEXT;
-  
-  -- Delete the JSON data from auth.users.raw_user_metadata
-  UPDATE auth.users
-  SET raw_user_meta_data = NULL
-  WHERE auth.users.id = NEW.id;
-  
-  RETURN NEW;
+  BEGIN
+    -- Extract the fields from the raw_user_metadata JSON in auth.users
+    -- and insert into customers
+    INSERT INTO customers(customer_id, last_name, first_name)
+    SELECT NEW.id,
+          (SELECT (raw_user_meta_data ->> 'last_name')
+            FROM auth.users
+            WHERE user_id = NEW.id)::TEXT,
+          (SELECT (raw_user_meta_data ->> 'first_name')
+            FROM auth.users
+            WHERE user_id = NEW.id)::TEXT;
+    
+    -- Delete the JSON data from auth.users.raw_user_metadata
+    UPDATE auth.users
+    SET raw_user_meta_data = NULL
+    WHERE auth.users.id = NEW.id;
+    
+    RETURN NEW;
+  END;
 END;
 $$;
 
@@ -45,5 +47,5 @@ WHEN ((NEW.raw_user_meta_data ->> 'frontend')::TEXT = 'customer') -- checks that
 EXECUTE FUNCTION create_customer();
 
 -- ================================================================================================================ 
--- TODO Ratings recalculation trigger
+-- TODO Ratings recalculation trigger - might be better to do this client side.
 -- ================================================================================================================
