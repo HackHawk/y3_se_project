@@ -4,8 +4,6 @@
 
 -- Contractions - C: Create, R: Read, U:Update, D:Delete
 
--- Relations  ====================================================================================================
-
 BEGIN;
 
 CREATE TABLE
