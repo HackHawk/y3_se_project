@@ -1,26 +1,30 @@
-import React from "react";
-import { Card, CardBody } from "@nextui-org/react";
+// BookCard.js
+
+import CoverPage from "./CoverPage"; // This component should render the book's cover image
+import Rating from "../Rating/Rating"; // This component should render the book rating
 
 const BookCard = ({ value }) => {
+  let src;
+  if (value.cover_page) {
+    src = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/coverpages/${value.cover_page[0]}`;
+  }
+
   return (
-    <Card
-      isBlurred
-      className="w-auto bg-slate-50 h-auto rounded-lg pr-0 ml-5 mr-10 mb-5 border-none bg-background/60 dark:bg-default-100/50 max-w-[610px]"
-      shadow="sm"
-    >
-
-      <div className="float-left m-5">
-        <p>BT</p>
+    <div className="relative group bg-white rounded-lg overflow-hidden shadow-lg transition duration-300 ease-in-out transform hover:-translate-y-1 hover:bg-gray-100">
+      <div className="absolute top-0 right-0 px-2 py-1 bg-green-200 text-green-800 text-sm font-bold rounded-bl-lg">
+        In Stock
       </div>
-      <h2 className="">{value.title}</h2>
-      <p>
-        by {value.author} | Date: {value.publication_date} | ISBN: {value.ISBN} | {value.genre}
-      </p>
-      <p>Rating: {value.rating}</p>
-
-      {/* Find out the meaning of this code */}
-      <p>{Array.from({ length: value.rating }, () => "⭐").join("")}</p>
-    </Card>
+      <div className="flex justify-center items-center pt-5 pb-5">
+        <CoverPage imageUrl={src} />
+      </div>
+      <div className="px-5 pb-5 text-left">
+        <h2 className="text-xl font-semibold mb-2">{value.title}</h2>
+        <p className="text-base text-gray-600">{value.authors}</p>
+        <div className="flex justify-left mt-2.5">
+          <Rating value={value.average_rating} />
+        </div>
+      </div>
+    </div>
   );
 };
 

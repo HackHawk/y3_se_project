@@ -1,13 +1,19 @@
 import React, { useState } from "react";
 import { Button, Input } from "@nextui-org/react";
 import { SearchIcon } from "../Icons/SearchIcon";
-
-const Searchbar = ({ handleKeywordChange }) => {
+import GenreDropdown from "./GenreDropdown";
+const Searchbar = ({ handleSearch, genres }) => {
   const [inputValue, setInputValue] = useState("");
+  const [selectedGenres, setSelectedGenres] = useState([]);
+  let selectedGenresWithoutIndex;
 
   const handleSumbit = (e) => {
     e.preventDefault();
-    handleKeywordChange(inputValue);
+    selectedGenresWithoutIndex = [];
+    selectedGenres.forEach((index) =>
+      selectedGenresWithoutIndex.push(genres[index].genre)
+    );
+    handleSearch(inputValue, selectedGenresWithoutIndex);
   };
 
   const handleInputChange = (e) => {
@@ -17,24 +23,35 @@ const Searchbar = ({ handleKeywordChange }) => {
   return (
     <div>
       <form onSubmit={handleSumbit}>
-        <div className="flex flex-row">
+        <div className="flex gap-2 flex-row max-w-xl items-center mt-5">
           <Input
             isClearable
             type="text"
-            label="Search"
             variant="bordered"
-            placeholder="Search Book"
+            placeholder="Search books by title and authors"
             labelPlacement={"outside-left"}
             onClear={() => setInputValue("")}
             value={inputValue}
             onChange={handleInputChange}
-            className="max-w-xs"
+            className="max-w-fit shrink"
             startContent={
               <SearchIcon className="text-black/50 mb-0.5 dark:text-white/90 text-slate-400 pointer-events-none flex-shrink-0" />
             }
           />
-          <Button type="submit">
-            <SearchIcon />
+          <GenreDropdown
+            genres={genres}
+            selectedGenres={selectedGenres}
+            setSelectedGenres={setSelectedGenres}
+          />
+
+          <Button
+            type="submit"
+            size="lg"
+            radius="sm"
+            variant="solid"
+            className="items-center bg-orange-700"
+          >
+            <SearchIcon color="white"/>
           </Button>
         </div>
       </form>

@@ -22,29 +22,16 @@ const DisplayNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <Navbar onMenuOpenChange={setIsMenuOpen}>
+    <Navbar
+      onMenuOpenChange={setIsMenuOpen}
+      isMenuOpen={isMenuOpen}
+      className=" bg-amber-700/50 rounded flex items-center"
+    >
       <NavbarContent>
-        <NavbarBrand>
-          <p className="font-bold text-inherit">Book Store</p>
+        <NavbarBrand className="flex flex-row gap-2">
+          <img src="Eneho_books_logo.png" alt="Bookstore logo" />
+          <p className="font-bold text-xl">እነሆ መጻሕፍት</p>
         </NavbarBrand>
-      </NavbarContent>
-
-      <NavbarContent className="hidden sm:flex gap-4">
-        <NavbarItem>
-          <Link color="foreground" href="#">
-            PlaceHolder 1
-          </Link>
-        </NavbarItem>
-        <NavbarItem isActive>
-          <Link href="#" aria-current="page">
-            PlaceHolder 2
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link color="foreground" href="#">
-            PlaceHolder 3
-          </Link>
-        </NavbarItem>
       </NavbarContent>
 
       <div className="flex flex-row gap-5">
@@ -67,9 +54,9 @@ const DisplayNavbar = () => {
                 as="button"
                 className="transition-transform"
                 color="secondary"
-                name="Jason Hughes"
+                name="Test User"
                 size="sm"
-                src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+                src=""
               />
             </DropdownTrigger>
             <DropdownMenu aria-label="Profile Actions" variant="flat">
@@ -95,17 +82,17 @@ const DisplayNavbar = () => {
       <NavbarMenu>
         <NavbarItem>
           <Link color="foreground" href="#">
-            Features
+            Home
           </Link>
         </NavbarItem>
         <NavbarItem isActive>
           <Link href="#" aria-current="page">
-            Customers
+          Search Books
           </Link>
         </NavbarItem>
         <NavbarItem>
           <Link color="foreground" href="#">
-            Integrations
+            Latest Books
           </Link>
         </NavbarItem>
       </NavbarMenu>

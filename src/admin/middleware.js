@@ -1,16 +1,33 @@
-import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs'
-import { NextResponse } from 'next/server'
+import { createMiddlewareClient } from "@supabase/auth-helpers-nextjs";
+import { NextResponse } from "next/server";
 
 export async function middleware(req) {
-  const res = NextResponse.next()
+  const res = NextResponse.next();
 
   // Create a Supabase client configured to use cookies
-  const supabase = createMiddlewareClient({ req, res })
+  const supabase = createMiddlewareClient({ req, res });
 
   // Refresh session if expired - required for Server Components
-  await supabase.auth.getSession()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  return res
+  const path = req.nextUrl.pathname;
+
+  if (user) {
+    // const accountPathRegex = /^\/admin(\/|$)/; // Matches "/admin" and any subpath like "/admin/subpath"
+    if (path === "/") {
+      return NextResponse.redirect(new URL("/admin", req.url));
+    }
+  }
+
+  if (!user) {
+    if (path !== "/" && path !=="/account/forgot-password" && path !== "/account/update-password") {
+      return NextResponse.redirect(new URL("/", req.url));
+    }
+  }
+
+  return res;
 }
 
 // Ensure the middleware is only called for relevant paths.
@@ -23,6 +40,6 @@ export const config = {
      * - favicon.ico (favicon file)
      * Feel free to modify this pattern to include more paths.
      */
-    '/((?!_next/static|_next/image|favicon.ico).*)',
+    "/((?!_next/static|_next/image|favicon.ico).*)",
   ],
-}
+};

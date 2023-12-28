@@ -8,9 +8,8 @@ export default function LoginPage(){
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const router = useRouter()
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState("");
     const [loading, setLoading] = useState(true);
-    const [loading2, setLoading2] = useState(true);
 
 
     const supabase = createClientComponentClient();

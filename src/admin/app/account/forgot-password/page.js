@@ -26,6 +26,8 @@ const page = () => {
 
   return (
     <>
+        <main className="w-full h-screen flex flex-col items-center justify-center px-4">
+      <div className="max-w-sm w-full text-gray-600">
     <form onSubmit={handleReset}>
       <label className="font-medium">Email</label>
       <input
@@ -35,12 +37,14 @@ const page = () => {
         onChange={(e) => setEmail(e.target.value)}
         placeholder="Email"
         required
-        className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
+        className="w-full mt-2 mb-5 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
       />
       <Button color="primary" type="submit">
         Reset Password
       </Button>
       </form>
+      </div>
+      </main>
     </>
   );
 };
