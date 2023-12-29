@@ -162,3 +162,30 @@ BEGIN
 END;
 $$
 
+-- ================================================================================================================ 
+--  Delete user function
+-- ================================================================================================================
+
+CREATE OR REPLACE FUNCTION delete_user(user_id UUID) 
+RETURNS VOID
+LANGUAGE plpgsql
+AS $$ 
+BEGIN 
+    BEGIN
+        -- Check if the user is a super admin
+        IF EXISTS (SELECT sp_admin_id FROM sp_admin WHERE sp_admin_id = user_id) THEN
+            RAISE EXCEPTION 'User cannot be deleted because they are a super admin';
+        END IF;
+
+        -- Perform deletion only if user exists either in admin or cusotmers
+        IF EXISTS (SELECT 1 FROM customers WHERE customer_id = user_id) THEN 
+            DELETE FROM public.customers WHERE customer_id = user_id;
+        ELSIF EXISTS (SELECT 1 FROM admins WHERE admin_id = user_id) THEN
+            DELETE FROM public.admins WHERE admin_id = user_id;
+        ELSE 
+            RAISE EXCEPTION 'User does not exist';
+        END IF;
+        
+    END;
+END;
+$$
