@@ -23,13 +23,12 @@ const Searchbar = ({ handleSearch, genres }) => {
   return (
     <div>
       <form onSubmit={handleSumbit}>
-        <div className="flex gap-2 flex-row max-w-xl items-center">
+        <div className="flex gap-2 flex-row max-w-xl items-center mt-5">
           <Input
             isClearable
             type="text"
-            label="Search"
             variant="bordered"
-            placeholder="Search books by title, and authors"
+            placeholder="Search books by title and authors"
             labelPlacement={"outside-left"}
             onClear={() => setInputValue("")}
             value={inputValue}
@@ -49,11 +48,10 @@ const Searchbar = ({ handleSearch, genres }) => {
             type="submit"
             size="lg"
             radius="sm"
-            color="primary"
             variant="solid"
-            className="items-center"
+            className="items-center bg-orange-700"
           >
-            <SearchIcon />
+            <SearchIcon color="white"/>
           </Button>
         </div>
       </form>

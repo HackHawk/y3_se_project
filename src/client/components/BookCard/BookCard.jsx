@@ -1,7 +1,7 @@
-import { Card } from "@nextui-org/react";
-import Image from "next/image";
-import StarIcon from "../Icons/StarIcon";
-import CoverPage from "../CoverPage/CoverPage";
+// BookCard.js
+
+import CoverPage from "./CoverPage"; // This component should render the book's cover image
+import Rating from "../Rating/Rating"; // This component should render the book rating
 
 const BookCard = ({ value }) => {
   let src;
@@ -10,41 +10,21 @@ const BookCard = ({ value }) => {
   }
 
   return (
-    <Card
-    className="
-    hover
-    w-full
-    shadow-md
-    hover:shadow-lg
-    p-5
-    mb-4
-    bg-orange-200
-    rounded-lg
-    max-w-screen-2xl
-    border border-gray-200 dark:border-gray-900"
-    >
-      <div className="flex flex-row justify-normal items-center">
-        <div className="flex justify-center items-center m-5">
-          {/* Specify the image url by using the {imageUrl} prop*/}
-          <CoverPage imageUrl={src}/>
-        </div>
-        <div>
-          <h2 className="text-xl font-semibold mb-2">{value.title}</h2>
-          <p className="text-base text-gray-500 dark:text-gray-400">
-            by {value.author} | Date: {value.publication_date} | ISBN: {value.ISBN} | Genre: {value.genre}
-          </p>
-          <p className="text-base font-italic">
-            Rating: {value.rating > 0 && (
-              <span className="text-yellow-500 dark:text-yellow-300 flex items-center">
-                {Array.from({ length: value.average_rating }).map((_, index) => (
-                  <StarIcon key={index} />
-                ))}
-              </span>
-            )}
-          </p>
+    <div className="relative group bg-white rounded-lg overflow-hidden shadow-lg transition duration-300 ease-in-out transform hover:-translate-y-1 hover:bg-gray-100">
+      <div className="absolute top-0 right-0 px-2 py-1 bg-green-200 text-green-800 text-sm font-bold rounded-bl-lg">
+        In Stock
+      </div>
+      <div className="flex justify-center items-center pt-5 pb-5">
+        <CoverPage imageUrl={src} />
+      </div>
+      <div className="px-5 pb-5 text-left">
+        <h2 className="text-xl font-semibold mb-2">{value.title}</h2>
+        <p className="text-base text-gray-600">{value.authors}</p>
+        <div className="flex justify-left mt-2.5">
+          <Rating value={value.average_rating} />
         </div>
       </div>
-    </Card>
+    </div>
   );
 };
 

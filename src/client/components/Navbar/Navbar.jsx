@@ -25,7 +25,7 @@ const DisplayNavbar = () => {
     <Navbar
       onMenuOpenChange={setIsMenuOpen}
       isMenuOpen={isMenuOpen}
-      className="max-w-6xl bg-amber-700/50 rounded flex items-center"
+      className=" bg-amber-700/50 rounded flex items-center"
     >
       <NavbarContent>
         <NavbarBrand className="flex flex-row gap-2">
