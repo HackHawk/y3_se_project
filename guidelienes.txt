@@ -1,0 +1,5 @@
+-- Make every starting page SSR except search functionality related So homepage, and book details should be ssr
+-- 
+
+
+
