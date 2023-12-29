@@ -1,5 +1,5 @@
 -- ===============================================================================================================
--- Database schema v2.1
+-- Database schema v2.2
 -- ===============================================================================================================
 
 -- Contractions - C: Create, R: Read, U:Update, D:Delete
@@ -23,7 +23,7 @@ CREATE TABLE
     genre TEXT,
     publisher TEXT,
     publication_date DATE,
-    price MONEY CHECK (price > 0 OR price = 0 OR price = NULL),
+    price DECIMAL(10, 2) CHECK (price > 0 OR price = 0 OR price = NULL),
     is_hardcover BOOLEAN,
     average_rating DECIMAL(2, 1) DEFAULT 0,
     quantity BIGINT CHECK (quantity > 0 OR quantity = 0 OR quantity = NULL),
@@ -91,7 +91,7 @@ CREATE TABLE
     customer_id UUID NOT NULL,
     book_id BIGINT NOT NULL,
     purchase_timestamp TIMESTAMPTZ DEFAULT NOW () NOT NULL,
-    amount MONEY NOT NULL CHECK (amount > 0),
+    amount DECIMAL(10, 2) NOT NULL CHECK (amount > 0),
     PRIMARY KEY (customer_id, book_id, purchase_timestamp),
     FOREIGN KEY (customer_id) REFERENCES PUBLIC.customers (customer_id) ON UPDATE CASCADE ON DELETE SET NULL,
     FOREIGN KEY (book_id) REFERENCES PUBLIC.books (book_id) ON UPDATE CASCADE -- Since deletion is performed using the delete_book() function the on delete condition is not necessary
@@ -103,3 +103,14 @@ END;
 
 
 
+-- 🔀 v2.1 -> v2.2 : Changed columns which use the MONEY datatype to use DECIMAL(10, 2) instead.
+-- To migrate without recreating your database, execute these scripts:
+  -- BEGIN;
+
+  -- ALTER TABLE PUBLIC.books
+  --     ALTER COLUMN price TYPE DECIMAL(10, 2) USING price::DECIMAL(10, 2);
+
+  -- ALTER TABLE PUBLIC.purchases
+  --     ALTER COLUMN amount TYPE DECIMAL(10, 2) USING amount::DECIMAL(10, 2);
+
+  -- END;
