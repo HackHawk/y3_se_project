@@ -8,6 +8,7 @@
 -- TODO Update book function 
 -- ================================================================================================================
 
+
 -- ================================================================================================================ 
 -- Read book function 
 -- ================================================================================================================
@@ -166,6 +167,7 @@ $$
 --  Delete user function
 -- ================================================================================================================
 
+-- This function deletes a user if they are either an admin or a customer
 CREATE OR REPLACE FUNCTION delete_user(user_id UUID) 
 RETURNS VOID
 LANGUAGE plpgsql
@@ -179,11 +181,11 @@ BEGIN
 
         -- Perform deletion only if user exists either in admin or cusotmers
         IF EXISTS (SELECT 1 FROM customers WHERE customer_id = user_id) THEN 
-            DELETE FROM public.customers WHERE customer_id = user_id;
+            DELETE FROM auth.users WHERE id = user_id;
         ELSIF EXISTS (SELECT 1 FROM admins WHERE admin_id = user_id) THEN
-            DELETE FROM public.admins WHERE admin_id = user_id;
+            DELETE FROM auth.users WHERE id = user_id;
         ELSE 
-            RAISE EXCEPTION 'User does not exist';
+            RAISE EXCEPTION 'User does not exist, or is not an admin or a customer';
         END IF;
         
     END;
