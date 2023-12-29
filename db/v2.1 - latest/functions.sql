@@ -83,7 +83,7 @@ DECLARE
 BEGIN
     BEGIN
         -- Get the cover page paths for the book
-        SELECT cover_page_urls INTO cover_page_paths FROM public.books WHERE book_id = book_id_param;
+        SELECT cover_page_urls INTO STRICT cover_page_paths FROM public.books WHERE book_id = book_id_param;
 
         -- Check if the book has been purchased
         IF EXISTS (SELECT 1 FROM public.purchases WHERE book_id = book_id_param) THEN
