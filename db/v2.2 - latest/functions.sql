@@ -1,67 +1,93 @@
--- TODO create is_deleted flag compliant crud functions for books relation
-
 -- ================================================================================================================ 
--- TESTME Insert book function 
+-- ✅ Insert book function (Tested)
 -- ================================================================================================================
 
 CREATE OR REPLACE FUNCTION insert_book(
-    isbn BIGINT,
-    title TEXT,
-    amhr_title TEXT,
-    authors TEXT,
-    synopsis TEXT,
-    amhr_synopsis TEXT,
-    publisher TEXT,
-    publication_date DATE,
-    price MONEY,
-    is_hardcover BOOLEAN,
-    quantity BIGINT,
-    genre TEXT DEFAULT NULL,
-    addition_tmstmp TIMESTAMPTZ DEFAULT NOW(), -- Set addition timestamp
-    cover_page_urls TEXT[] DEFAULT NULL
-) RETURNS VOID
-LANGUAGE plpgsql
-AS $$
-BEGIN
-    INSERT INTO books (
-        isbn,
-        title,
-        amhr_title,
-        authors,
-        synopsis,
-        amhr_synopsis,
-        genre,
-        publisher,
-        publication_date,
-        price,
-        is_hardcover,
-        quantity,
-        addition_tmstmp,
-        is_deleted,
-        cover_page_urls
-    ) VALUES (
-        isbn,
-        title,
-        amhr_title,
-        authors,
-        synopsis,
-        amhr_synopsis,
-        genre,
-        publisher,
-        publication_date,
-        price,
-        is_hardcover,
-        quantity,
-        addition_tmstmp,  
-        FALSE,  -- Set is_deleted to FALSE
-        cover_page_urls
-    );
-END;
-$$;
-
+        isbn BIGINT,
+        title TEXT,
+        amhr_title TEXT,
+        authors TEXT,
+        synopsis TEXT,
+        amhr_synopsis TEXT,
+        publisher TEXT,
+        publication_date DATE,
+        price DECIMAL(10, 2),
+        is_hardcover BOOLEAN,
+        quantity BIGINT,
+        genre TEXT DEFAULT NULL,
+        addition_tmstmp TIMESTAMPTZ DEFAULT NOW(), -- Set addition timestamp
+        cover_page_urls TEXT[] DEFAULT NULL
+    ) RETURNS VOID
+    LANGUAGE plpgsql
+    AS $$
+    BEGIN
+        INSERT INTO books (
+            isbn,
+            title,
+            amhr_title,
+            authors,
+            synopsis,
+            amhr_synopsis,
+            genre,
+            publisher,
+            publication_date,
+            price,
+            is_hardcover,
+            quantity,
+            addition_tmstmp,
+            is_deleted,
+            cover_page_urls
+        ) VALUES (
+            isbn,
+            title,
+            amhr_title,
+            authors,
+            synopsis,
+            amhr_synopsis,
+            genre,
+            publisher,
+            publication_date,
+            price,
+            is_hardcover,
+            quantity,
+            addition_tmstmp,  
+            FALSE,  -- Set is_deleted to FALSE
+            cover_page_urls
+        );
+    END;
+    $$;
 
 -- ================================================================================================================ 
--- TESTME Update book function 
+-- ✅ Delete user function (Tested)
+-- ================================================================================================================
+
+-- This function deletes a user if they are either an admin or a customer
+CREATE OR REPLACE FUNCTION delete_user(user_id UUID) 
+    RETURNS VOID
+    LANGUAGE plpgsql
+    AS $$ 
+    BEGIN 
+        BEGIN
+            -- Check if the user is a super admin
+            IF EXISTS (SELECT sp_admin_id FROM sp_admin WHERE sp_admin_id = user_id) THEN
+                RAISE EXCEPTION 'User cannot be deleted because they are a super admin';
+            END IF;
+
+            -- Perform deletion only if user exists either in admin or cusotmers
+            IF EXISTS (SELECT 1 FROM customers WHERE customer_id = user_id) THEN 
+                DELETE FROM auth.users WHERE id = user_id;
+            ELSIF EXISTS (SELECT 1 FROM admins WHERE admin_id = user_id) THEN
+                DELETE FROM auth.users WHERE id = user_id;
+            ELSE 
+                RAISE EXCEPTION 'User does not exist, or is not an admin or a customer';
+            END IF;
+
+        END;
+    END;
+    $$
+
+-- ================================================================================================================ 
+-- ✅ Update book function (Tested)
 -- ================================================================================================================
 
 CREATE OR REPLACE FUNCTION update_book (
@@ -75,7 +101,7 @@ CREATE OR REPLACE FUNCTION update_book (
     genre TEXT DEFAULT NULL,
     publisher TEXT DEFAULT NULL,
     publication_date DATE DEFAULT NULL,
-    price MONEY DEFAULT NULL,
+    price DECIMAL(10, 2) DEFAULT NULL,
     is_hardcover BOOLEAN DEFAULT NULL,
     quantity BIGINT DEFAULT NULL,
     cover_page_urls TEXT[] DEFAULT NULL
@@ -83,7 +109,7 @@ CREATE OR REPLACE FUNCTION update_book (
 LANGUAGE plpgsql
 AS $$
 BEGIN
-    IF EXISTS (SELECT 1 FROM books WHERE books.book_id = update_book.book_id AND is_deleted = FALSE) THEN
+    IF EXISTS (SELECT 1 FROM books WHERE books.book_id = update_book.book_id AND books.is_deleted = FALSE) THEN
         UPDATE books
         SET isbn = COALESCE(update_book.isbn, books.isbn),  -- Preserve existing ISBN if null
             title = COALESCE(update_book.title, books.title),  -- Preserve existing title if null
@@ -100,11 +126,10 @@ BEGIN
             cover_page_urls = COALESCE(update_book.cover_page_urls, books.cover_page_urls)
         WHERE books.book_id = update_book.book_id;
     ELSE
-        RAISE EXCEPTION 'Cannot update book because it is deleted. Either is_deleted is false or it does not exist';
+        RAISE EXCEPTION 'Cannot update book. Either the book has been soft-deleted or it does not exist';
     END IF;
 END;
 $$;
-select update_book (book_id => 13, title => 'The Shadowy Queen');
 
 -- ================================================================================================================ 
 -- TESTME -- FIXME Read book function 
@@ -127,7 +152,7 @@ CREATE OR REPLACE FUNCTION retrieve_books (
         genre TEXT,
         publisher TEXT,
         publication_date DATE,
-        price MONEY,
+        price DECIMAL(10, 2),
         is_hardcover BOOLEAN,
         average_rating DECIMAL(2, 1),
         quantity BIGINT,
@@ -258,32 +283,3 @@ CREATE OR REPLACE FUNCTION buy_books(customer_id UUID, book_id BIGINT, quantity 
         END;
     END;
     $$;
-
--- ================================================================================================================ 
---  Delete user function (Tested)
--- ================================================================================================================
-
--- This function deletes a user if they are either an admin or a customer
-CREATE OR REPLACE FUNCTION delete_user(user_id UUID) 
-    RETURNS VOID
-    LANGUAGE plpgsql
-    AS $$ 
-    BEGIN 
-        BEGIN
-            -- Check if the user is a super admin
-            IF EXISTS (SELECT sp_admin_id FROM sp_admin WHERE sp_admin_id = user_id) THEN
-                RAISE EXCEPTION 'User cannot be deleted because they are a super admin';
-            END IF;
-
-            -- Perform deletion only if user exists either in admin or cusotmers
-            IF EXISTS (SELECT 1 FROM customers WHERE customer_id = user_id) THEN 
-                DELETE FROM auth.users WHERE id = user_id;
-            ELSIF EXISTS (SELECT 1 FROM admins WHERE admin_id = user_id) THEN
-                DELETE FROM auth.users WHERE id = user_id;
-            ELSE 
-                RAISE EXCEPTION 'User does not exist, or is not an admin or a customer';
-            END IF;
-
-        END;
-    END;
-    $$
