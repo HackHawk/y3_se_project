@@ -41,7 +41,7 @@ END;
 $$;
 
 CREATE OR REPLACE TRIGGER create_customer_trigger
-AFTER INSERT ON auth.users
+BEFORE INSERT ON auth.users
 FOR EACH ROW
 WHEN ((NEW.raw_user_meta_data ->> 'frontend')::TEXT = 'customer') -- checks that the user is signing in from the client frontend before 
 EXECUTE FUNCTION create_customer();

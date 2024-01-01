@@ -84,7 +84,7 @@ CREATE OR REPLACE FUNCTION delete_user(user_id UUID)
 
         END;
     END;
-    $$
+    $$;
 
 -- ================================================================================================================ 
 -- ✅ Update book function (Tested)
@@ -132,64 +132,80 @@ END;
 $$;
 
 -- ================================================================================================================ 
--- TESTME -- FIXME Read book function 
+-- ✅ Read book function (Tested)
 -- ================================================================================================================
 
--- This query excludes is_deleted and cover_page_urls and respects is_deleted.
+-- This query excludes respects is_deleted when retrieveing a book with the specified pattern or isbn.
 CREATE OR REPLACE FUNCTION retrieve_books (
-        pattern TEXT DEFAULT NULL,
-        input_book_id BIGINT DEFAULT NULL, 
-        input_isbn BIGINT DEFAULT NULL
-    )
-    RETURNS TABLE (
-        book_id BIGINT,
-        isbn BIGINT,
-        title TEXT,
-        amhr_title TEXT,
-        authors TEXT,
-        synopsis TEXT,
-        amhr_synopsis TEXT,
-        genre TEXT,
-        publisher TEXT,
-        publication_date DATE,
-        price DECIMAL(10, 2),
-        is_hardcover BOOLEAN,
-        average_rating DECIMAL(2, 1),
-        quantity BIGINT,
-        addition_tmstmp TIMESTAMPTZ
-    )
-    LANGUAGE plpgsql
-    AS $$
-    BEGIN   
-        RETURN QUERY
-            SELECT 
-                book_id,
-                isbn,
-                title,
-                amhr_title,
-                authors,
-                synopsis,
-                amhr_synopsis,
-                genre,
-                publisher,
-                publication_date,
-                price,
-                is_hardcover,
-                average_rating,
-                quantity,
-                addition_tmstmp
-            FROM
-                books
-            WHERE 
-                books.is_deleted = FALSE AND (
-                    books.book_id = retrieve_books.book_id OR
-                    books.authors ILIKE pattern OR
-                    books.title ILIKE pattern OR
-                    books.amhr_title ILIKE pattern
-                ); 
+    pattern TEXT DEFAULT NULL, 
+    genre_param TEXT DEFAULT NULL
+)
+RETURNS TABLE ( 
+    book_id BIGINT,
+    isbn BIGINT,
+    title TEXT,
+    amhr_title TEXT,
+    authors TEXT,
+    synopsis TEXT,
+    amhr_synopsis TEXT,
+    genre TEXT,
+    publisher TEXT,
+    publication_date DATE,
+    price DECIMAL(10, 2),
+    is_hardcover BOOLEAN,
+    average_rating DECIMAL(2, 1),
+    quantity BIGINT,
+    addition_tmstmp TIMESTAMPTZ,
+    cover_page_urls TEXT[]
+) 
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    RETURN QUERY 
+        SELECT 
+            books.book_id,
+            books.isbn,
+            books.title,
+            books.amhr_title,
+            books.authors,
+            books.synopsis,
+            books.amhr_synopsis,
+            books.genre,
+            books.publisher,
+            books.publication_date,
+            books.price,
+            books.is_hardcover,
+            books.average_rating,
+            books.quantity,
+            books.addition_tmstmp,
+            books.cover_page_urls
+        FROM
+            books
+        WHERE 
+            CASE 
+                WHEN pattern IS NULL AND genre_param IS NULL THEN -- When pattern and genre_param are not given then 
+                    books.is_deleted = FALSE
+                WHEN pattern IS NULL AND genre_param IS NOT NULL THEN
+                    books.is_deleted = FALSE AND books.genre = genre_param
+                WHEN pattern IS NOT NULL AND genre_param IS NULL THEN
+                    books.is_deleted = FALSE AND (
+                        books.authors ILIKE pattern OR
+                        books.title ILIKE pattern OR
+                        books.amhr_title ILIKE pattern
+                    )
+                ELSE 
+                    books.is_deleted = FALSE AND (
+                        books.authors ILIKE pattern OR
+                        books.title ILIKE pattern OR
+                        books.amhr_title ILIKE pattern
+                    ) AND books.genre = genre_param
+            END;
+        
+END;
+$$;
 
-    END;
-    $$;
+-- Call the function like this:
+-- SELECT * FROM retrieve_books('%t%');
 
 -- ================================================================================================================ 
 -- TESTME Delete book function 
@@ -249,37 +265,49 @@ CREATE OR REPLACE FUNCTION delete_book(book_id_param BIGINT)
     $$;
 
 -- ================================================================================================================ 
---  TESTME Book purchase function
+--  TESTME Book purchase function -- QUESTION Should we have a maximum allowable quantity?
 -- ================================================================================================================
 
 -- Assumes that the customer UUID and book_id are valid
-CREATE OR REPLACE FUNCTION buy_books(customer_id UUID, book_id BIGINT, quantity BIGINT)
+CREATE OR REPLACE FUNCTION buy_books(
+        customer_id UUID,
+        book_id BIGINT,
+        quantity BIGINT
+    )
     RETURNS BOOLEAN
     LANGUAGE plpgsql
     AS $$
+    DECLARE
+        book_quantity INTEGER;
+        book_price NUMERIC;
     BEGIN
-        BEGIN
-          -- Check whether quantity is less than 1
-          IF (buy_books.quantity < 1 OR buy_books.quantity = NULL) THEN 
-            RAISE EXCEPTION 'Invalid quantity. Quantity of books inserted is less than 1 or is NULL.';
-          END IF;
-
-          -- Check for sufficient quantity
-          IF ((SELECT quantity FROM books WHERE books.book_id = buy_books.book_id) < quantity) THEN
-            RAISE EXCEPTION 'Insufficient book quantity available.';
-          END IF;
-
-          -- Update quantity in books table
-          UPDATE books
-          SET quantity = books.quantity - buy_books.quantity
-          WHERE books.book_id = buy_books.book_id;
-
-          -- Insert purchase record
-          INSERT INTO purchases (customer_id, book_id, amount)
-          VALUES (buy_books.customer_id, buy_books.book_id, (SELECT price FROM books WHERE book_id = buy_books.book_id) * quantity);
-
-          RETURN TRUE;  -- Indicate successful purchase
-
-        END;
+        -- Retrieve book quantity and price once
+        SELECT quantity, price 
+        INTO book_quantity, book_price
+        FROM books
+        WHERE book_id = buy_books.book_id;
+    
+        -- Check quantity validity
+        IF (buy_books.quantity < 1 OR buy_books.quantity = NULL) THEN 
+            RAISE EXCEPTION 'Invalid quantity. Quantity of books inserted is less than 1 or NULL.';
+        END IF;
+    
+        -- Check availability
+        IF (book_quantity < quantity) THEN
+            RAISE EXCEPTION 'Quantity specified exceeds quantity available.';
+        END IF;
+    
+        -- Update quantity in books table
+        UPDATE books
+        SET quantity = books.quantity - buy_books.quantity
+        WHERE book_id = buy_books.book_id;
+    
+        -- Insert purchase record
+        INSERT INTO purchases (customer_id, book_id, amount)
+        VALUES (buy_books.customer_id, buy_books.book_id, book_price * quantity);
+    
+        RETURN TRUE;  -- Indicate successful purchase
     END;
     $$;
+    
+    

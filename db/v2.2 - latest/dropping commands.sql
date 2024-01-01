@@ -19,6 +19,7 @@ DROP TABLE public.genres CASCADE;
 DROP FUNCTION delete_book(BIGINT);
 DROP FUNCTION retrieve_books(TEXT, BIGINT, BIGINT, TEXT);
 DROP FUNCTION buy_books(UUID, BIGINT, BIGINT);
+DROP FUNCTION IF EXISTS retrieve_books;
 
 -- ================================================================================================================ 
 -- Dropping triggers
