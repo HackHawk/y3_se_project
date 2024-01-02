@@ -85,27 +85,25 @@ export async function addBooks(formData) {
   }
 
   // Handling File Upload
-  const coverPageUrl = [];
-  if (files && files.length > 0) {
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      const fileExtension = file.name.split(".").pop();
-      const fileName = `${title}-${Date.now()}`;
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from("coverpages")
-        .upload(fileName, file);
+  // const coverPageUrl = [];
+  // if (files && files.length > 0) {
+  //   for (let i = 0; i < files.length; i++) {
+  //     const file = files[i];
+  //     const fileExtension = file.name.split(".").pop();
+  //     const fileName = `${title}-${Date.now()}`;
+  //     const { data: uploadData, error: uploadError } = await supabase.storage
+  //       .from("coverpages")
+  //       .upload(fileName, file);
+      
+  //     if (uploadError) {
+  //       console.error(uploadError);
+  //       return { message: "Error uploading file" };
+  //     }
+  //     coverPageUrl.push(uploadData.path);
+  //   }
+  // }
 
-      if (uploadError) {
-        console.error("Error uploading file:", uploadError);
-        return { message: "Error uploading file" };
-      }
-      coverPageUrl.push(uploadData.path);
-    }
-  }
-
-  console.log
-
-  console.log(coverPageUrl);
+  // console.log(coverPageUrl);
 
   const { data, error } = await supabase.from("books").insert([
     {
@@ -126,10 +124,10 @@ export async function addBooks(formData) {
     },
   ]);
 
-  if (error) {
-    console.error("Error Inserting Data", error);
-    return { message: "Error Inserting Data" };
-  }
+  // if (error) {
+  //   console.error("Error Inserting Data", error);
+  //   return { message: "Error Inserting Data" };
+  // }
 
   //   revalidatePath('/admin/manage-catalogue')
 

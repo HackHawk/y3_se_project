@@ -37,8 +37,8 @@ export async function addBooks(formData) {
   }
 
   // Validating ISBN
-  if (isbn && (isbn.length != 13)) {
-    return { message: "Invalid ISBN. It should be 13 characters long." };
+  if (isbn && (isbn.length != 10 || isbn.length != 13)) {
+    return { message: "Invalid ISBN. It should be 10 or 13 characters long." };
   }
 
   // Typecasting it here because I want the length property of the string to validate it
@@ -78,6 +78,7 @@ export async function addBooks(formData) {
     data: { session },
   } = await supabase.auth.getSession();
   const user = session?.user;
+  console.log(user);
 
   if (!user) {
     console.error("User is not authenticated");
@@ -94,16 +95,14 @@ export async function addBooks(formData) {
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from("coverpages")
         .upload(fileName, file);
-
+      
       if (uploadError) {
-        console.error("Error uploading file:", uploadError);
+        console.error(uploadError);
         return { message: "Error uploading file" };
       }
       coverPageUrl.push(uploadData.path);
     }
   }
-
-  console.log
 
   console.log(coverPageUrl);
 
@@ -119,10 +118,9 @@ export async function addBooks(formData) {
       publisher: publisher,
       publication_date: publicationDate,
       is_hardcover: printVersion,
-      language: language,
       quantity: quantity,
       price: price,
-      cover_page: coverPageUrl, // add the URL/path of the uploaded file
+      cover_page_urls: coverPageUrl, // add the URL/path of the uploaded file
     },
   ]);
 

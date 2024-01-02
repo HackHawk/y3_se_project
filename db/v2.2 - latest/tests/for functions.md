@@ -1,4 +1,4 @@
-> Note: ~~this~~ means that that test case has been verified.
+> Note: ~~this~~ means that that test case has been verified to work.
 
 
 Here are the tests for delete_user and insert_book, rewritten to resemble the format of the update_book tests:
@@ -124,32 +124,20 @@ Here are the tests for delete_user and insert_book, rewritten to resemble the fo
     - Steps: Test with invalid parameter types or values.
     - Expected behavior: Raises function does not exist error.
 
-# buy_books
+# ✅ buy_books
 **1. Valid Purchase Tests** 
-    - **Test 1: Successful purchase** 
+    - ~~**Test 1: Successful purchase**~~ 
         - Steps: 
             1. Insert a book with a quantity of `x`. 
             2. Insert a customer. 
             3. Call `buy_books(customer_id, book_id, x)`. 
         
         - Expected behavior: 
-            1. Function returns TRUE. 
-            2. Quantity in the `books` table is updated to `quantity - x`. 
-            3. A new record is inserted into the `purchases` table with the correct data. 
+            1. Quantity in the `books` table is updated to `quantity - x`. 
+            2. A new record is inserted into the `purchases` table with the correct data. 
 
-    - **Test 2: Multiple book purchase** 
-        - Steps: 
-            1. Insert a book with a quantity of 10. 
-            2. Insert a customer. 
-            3. Call `buy_books(customer_id, book_id, 4)` twice. 
-            
-        - Expected behavior: 
-            1. Function returns TRUE twice. 
-            2. Quantity in the `books` table is updated to 2. 
-            3. Two records are inserted into the `purchases` table with the correct data.
-
-**2. Input Validation Tests** 
-    - **Test 3: Invalid quantity (less than 1)** 
+**2. Input Validation Tests**
+    - ~~**Test 2: Invalid quantity (less than 1)**~~ 
         - Steps: 
             1. Insert a book. 
             2. Insert a customer. 
@@ -158,7 +146,7 @@ Here are the tests for delete_user and insert_book, rewritten to resemble the fo
         - Expected behavior: 
             1. Function raises the exception "Invalid quantity. Quantity of books inserted is less than 1 or NULL." 
 
-    - **Test 4: NULL quantity** 
+    - ~~**Test 4: NULL quantity**~~ 
         - Steps: 
             1. Insert a book. 
             2. Insert a customer. 
@@ -167,15 +155,15 @@ Here are the tests for delete_user and insert_book, rewritten to resemble the fo
         - Expected behavior: 
             1. Function raises the exception "Invalid quantity. Quantity of books inserted is less than 1 or NULL." 
     
-    - **Test 5: Invalid customer_id** 
+    - ~~**Test 5: Invalid customer_id**~~ 
         - Steps: 
             1. Insert a book. 
             2. Call `buy_books(nonexistent_customer_id, book_id, 2)`. 
             
         - Expected behavior: 
-            1. Function raises an appropriate exception indicating an invalid customer ID. 
+            1. Function raises an exception stating that the inserted customer_id violates the fk constraint on the purchases relation - since there is no customer with the given id.
     
-    - **Test 6: Invalid book_id** 
+    - ~~**Test 6: Invalid book_id**~~ 
         - Steps: 
             1. Insert a customer. 
             2. Call `buy_books(customer_id, nonexistent_book_id, 2)`. 
@@ -184,97 +172,213 @@ Here are the tests for delete_user and insert_book, rewritten to resemble the fo
             1. Function raises an appropriate exception indicating an invalid book ID.
 
 **3. Availability Checks** 
-    - **Test 7: Insufficient quantity** 
+    - ~~**Test 7: Insufficient quantity**~~ 
         - Steps: 
             1. Insert a book with a quantity of 1. 
             2. Insert a customer. 
             3. Call `buy_books(customer_id, book_id, 2)`. 
         
         - Expected behavior: 
-            1. Function raises the exception "Quantity specified exceeds quantity available."
+            1. Function raises the exception "Book quantity specified exceeds quantity available."
 
 **4. Edge Case Tests** 
-    - **Test 8: Zero quantity** 
-        - Steps: 
-            1. Insert a book. 
-            2. Insert a customer. 
-            3. Call `buy_books(customer_id, book_id, 0)`. 
-        
-        - Expected behavior: 
-            1. Function does not update the `books` table or insert a record in the `purchases` table. 
-            
-    - **Test 9: Attempting to purchase the last available book** 
+    - ~~**Test 9: Attempting to purchase the last available book**~~ 
         - Steps: 
             1. Insert a book with a quantity of 1. 
             2. Insert a customer. 
             3. Call `buy_books(customer_id, book_id, 1)`. 
         
         - Expected behavior: 
-            1. Function returns TRUE. 
-            2. Quantity in the `books` table is updated to 0. 
-            3. A new record is inserted into the `purchases` table with the correct data.
+            1. Quantity in the `books` table is updated to 0. 
+            2. A new record is inserted into the `purchases` table with the correct data.
 
-**5. Error Handling Tests** 
-    - **Test 10: Database errors (e.g., constraint violations)** 
-        - Steps: 
-            1. Simulate a constraint violation (e.g., a unique constraint on the customer_id and book_id in the purchases table). 
-            2. Call `buy_books(customer_id, book_id, 2)`. 
-        
-        - Expected behavior: 1. Function raises an appropriate exception indicating the constraint violation.
+# reformatted:
+## **✅ buy_books**
+
+**1. Valid Purchase**
+    - **Test 1: Successful Purchase**
+        - **Steps:**
+            1. Insert a book with quantity `x`.
+            2. Insert a customer.
+            3. Call `buy_books(customer_id, book_id, x)`.
+        - **EXPECTED BEHAVIOR:**
+            1. Quantity in `books` table becomes `quantity - x`.
+            2. New record in `purchases` table with correct data.
+        - **SUBTLE PITFALLS:**
+            - Ensure consistent currency handling if applicable.
+            - Verify no race conditions under concurrent purchases.
+
+**2. Input Validation**
+    - **Test 2: Invalid Quantity (< 1)**
+        - **Steps:**
+            1. Insert a book.
+            2. Insert a customer.
+            3. Call `buy_books(customer_id, book_id, 0)` or `buy_books(customer_id, book_id, NULL)`.
+        - **EXPECTED BEHAVIOR:**
+            1. Exception: "Invalid quantity. Quantity must be greater than 0."
+        - **SUBTLE PITFALLS:**
+            - Check for potential SQL injection vulnerabilities.
+
+    - **Test 3: Invalid Customer ID**
+        - **Steps:**
+            1. Insert a book.
+            2. Call `buy_books(nonexistent_customer_id, book_id, 2)`.
+        - **EXPECTED BEHAVIOR:**
+            1. Exception: Violation of foreign key constraint on `purchases` table.
+        - **SUBTLE PITFALLS:**
+            - Ensure meaningful error messages for debugging.
+
+    - **Test 4: Invalid Book ID**
+        - **Steps:**
+            1. Insert a customer.
+            2. Call `buy_books(customer_id, nonexistent_book_id, 2)`.
+        - **EXPECTED BEHAVIOR:**
+            1. Clear exception indicating invalid book ID.
+        - **SUBTLE PITFALLS:**
+            - Verify error message clarity for understanding the issue.
+
+**3. Availability Checks**
+    - **Test 5: Insufficient Quantity**
+        - **Steps:**
+            1. Insert a book with quantity 1.
+            2. Insert a customer.
+            3. Call `buy_books(customer_id, book_id, 2)`.
+        - **EXPECTED BEHAVIOR:**
+            1. Exception: "Book quantity specified exceeds quantity available."
+        - **SUBTLE PITFALLS:**
+            - Consider handling edge cases like multiple concurrent purchases.
+
+**4. Edge Cases**
+    - **Test 6: Purchasing Last Book**
+        - **Steps:**
+            1. Insert a book with quantity 1.
+            2. Insert a customer.
+            3. Call `buy_books(customer_id, book_id, 1)`.
+        - **EXPECTED BEHAVIOR:**
+            1. Quantity in `books` table becomes 0.
+            2. New record in `purchases` table with correct data.
+        - **SUBTLE PITFALLS:**
+            - Test behavior when attempting to purchase more books after quantity reaches 0.
+
+## **✅ retrieve_books**
+
+**1. Data Retrieval**
+    - **Test 1: Basic Retrieval**
+        - **Steps:**
+            - Call `SELECT * FROM retrieve_books();`
+        - **EXPECTED BEHAVIOR:**
+            - Returns all non-deleted books from `books` table.
+        - **SUBTLE PITFALLS:**
+            - Ensure correct handling of soft-deleted books (if applicable).
+
+    - **Test 2: Pattern-Based Retrieval**
+        - **Steps:**
+            - Test with various patterns (e.g., `SELECT * FROM retrieve_books('%adventure%');`)
+        - **EXPECTED BEHAVIOR:**
+            - Retrieves books matching the pattern in authors, title, or Amharic title.
+        - **SUBTLE PITFALLS:**
+            - Verify case-sensitivity and special character handling.
+
+    - **Test 3: Genre-Based Retrieval**
+        - **Steps:**
+            - Test with different genres (e.g., `SELECT * FROM retrieve_books(NULL, 'fantasy');`)
+        - **EXPECTED BEHAVIOR:**
+            - Filters books by the specified genre.
+        - **SUBTLE PITFALLS:**
+            - Ensure accurate genre matching and handling of potential typos.
+
+    - **Test 4: Combined Retrieval**
+        - **Steps:**
+            - Test with both pattern and genre (e.g., `SELECT * FROM retrieve_books('%title%', 'Thriller');`)
+        - **EXPECTED BEHAVIOR:**
+            - Correctly combines filtering conditions.
+        - **SUBTLE PITFALLS:**
+            - Verify precedence and logical combination of filters.
+
+**2. Parameter Handling**
+    - **Test 5: Null Parameters**
+        - **Steps:**
+            - Call `SELECT * FROM retrieve_books(NULL, NULL);`
+        - **EXPECTED BEHAVIOR:**
+            - Returns all non-deleted books.
+        - **SUBTLE PITFALLS:**
+            - Ensure consistent behavior with different database clients.
+
+    - **Test 6: Single Parameter Tests**
+        - **Steps:**
+            - Test with patterns or genres individually.
+        - **EXPECTED BEHAVIOR:**
+            - Filters books based on the provided parameter.
+        - **SUBTLE PITFALLS:**
+            - Verify correct handling of missing parameters.
+
+**3. Edge Cases**
+    - **Test 7: Invalid Patterns**
+        - **Steps:**
+            - Test with empty strings, non-matching patterns.
+        - **EXPECTED BEHAVIOR:**
+            - Returns an empty table.
+        - **SUBTLE PITFALLS:**
+            - Ensure meaningful error messages for debugging.
+
+**4. Error Handling**
+    - **Test 8: Invalid Parameters**
+        - **Steps:**
+            - Call with invalid parameter types or values.
+        - **EXPECTED BEHAVIOR:**
+            - Raises appropriate error messages.
+        - **SUBTLE PITFALLS:**
+            - Test for unexpected error types or misleading messages.
 
 
-# Advanced tests - not done for now but worth considering in the future 
-## delete_user
-  - Multiple Attempts: Simulate scenarios where multiple processes or users try to delete the same user concurrently to test for race conditions or unexpected behavior.
-  - Data Integrity: Check if any constraints or triggers might prevent deletion under certain conditions.
+# ❌ ~~delete_book~~ the tests will be similar but we won't have a delete book sql function since there isn't a way to delete the coverpages as well.
 
-## For all
-  -  Database errors:
-        Steps: Simulate database errors (e.g., connection issues, table access problems).
-        Expected behavior: Tests error handling and transaction rollback.
-  - **BOUNDARY CONDITIONS**:
-    1. Numeric Fields:
-        - isbn:
-            Maximum positive value (9223372036854775807 for BIGINT)
-            Minimum positive value (1)
-            Negative values
-            Non-numeric values (string, boolean)
-            
-        - price:
-            Maximum positive value for money type in PostgreSQL (9223372036854775807.9999)
-            Minimum positive value (0.01)
-            Negative values
-            Non-numeric values (string, boolean)
+**1. Functionality Tests**
 
-        - quantity:
-            Maximum positive value for BIGINT (9223372036854775807)
-            Minimum positive value (1)
-            Negative values
-            Non-numeric values (string, boolean)
+- **Test 1: Successful Book Deletion:**
+    - Steps:
+      1. Insert a book with cover pages into the database.
+      2. Call `SELECT delete_book(book_id)`, passing the inserted book's ID.
+    - Expected behavior:
+      1. Function returns `TRUE`.
+      2. Book record is either softly deleted (with `is_deleted` set to `TRUE`) or completely removed from the `books` table, depending on purchase history.
+      3. Related records in `customer_reviews` and `prioritized_books` tables are deleted.
+      4. Cover pages are successfully removed from storage.
+      5. `cover_page_urls` column in the `books` table is set to `NULL`.
 
-    2. String Fields:
-            title, amhr_title, authors, synopsis, amhr_synopsis, publisher, genre:
-            Empty string ("")
-            String exceeding any defined character limit (if applicable)
-            Special characters or control characters
-        
-    3. Date Field:
-            publication_date:
-                Date in the future beyond a reasonable limit (e.g., year 2100)
-                Date before the book could have been published (e.g., before Gutenberg press invention)
-                Invalid date format
-    4. Boolean Field:
-        is_hardcover:
-            NULL value
-            Non-boolean values (string, number)
-        
-    5. Array Field:
-        cover_page_urls:
-            Empty array ([])
-            Array exceeding a defined maximum length (if applicable)
-            Invalid URLs in the array (e.g., missing protocol, non-existent domain)
+- **Test 2: Non-Existent Book:**
+    - Steps: Call `SELECT delete_book(invalid_book_id)` with a book ID that doesn't exist.
+    - Expected behavior: Function returns `FALSE` or raises an appropriate exception. 
 
-        Additional Tests:
-            Try combinations of boundary values (e.g., maximum isbn with minimum price).
-            Test invalid combinations of parameters that shouldn't be allowed (e.g., empty title and amhr_title).
-## retrieve_books 
+**2. Edge Case Handling**
+
+- **Test 3: Book with Missing Cover Pages:**
+    - Steps: Insert a book without any cover pages and try to delete it.
+    - Expected behavior: Function executes successfully without attempting storage deletion.
+
+- **Test 4: Book with Multiple Cover Pages:**
+    - Steps: Insert a book with multiple cover page URLs and delete it.
+    - Expected behavior: All cover pages are successfully removed from storage.
+
+- **Test 5: Book with Purchase History (Soft Delete):**
+    - Steps: Insert a book, create a corresponding purchase record, and delete the book.
+    - Expected behavior: Book is softly deleted (fields cleared, `is_deleted` set to `TRUE`), not hard-deleted.
+
+**3. Error Handling**
+
+- **Test 6: Storage Deletion Failure:**
+    - Steps: Simulate a storage deletion failure (e.g., by removing permissions or causing a network error).
+    - Expected behavior: Function raises an exception indicating the storage deletion issue.
+
+- **Test 7: Database Constraint Violation:**
+    - Steps: Create a foreign key constraint preventing book deletion with existing reviews. Try to delete a book with reviews.
+    - Expected behavior: Function raises an exception indicating the constraint violation.
+
+**4. Additional Considerations:**
+
+- **Test 8: User Permissions:**
+    - If applicable, test authorization checks to ensure only authorized users can delete books.
+- **Test 9: Transaction Behavior:**
+    - If using transactions, test their behavior (e.g., rollback on errors) in the context of book deletion.
+
+

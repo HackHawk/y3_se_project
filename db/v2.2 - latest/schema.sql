@@ -102,7 +102,7 @@ ALTER TABLE PUBLIC.purchases ENABLE ROW LEVEL SECURITY;
 END;
 
 
-
+-- CONSIDER: add a quantity column to the purchases relation?
 -- 🔀 v2.1 -> v2.2 : Changed columns which use the MONEY datatype to use DECIMAL(10, 2) instead.
 -- To migrate without recreating your database, execute these scripts:
   -- BEGIN;
