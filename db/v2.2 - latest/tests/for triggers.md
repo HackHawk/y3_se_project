@@ -1,6 +1,6 @@
 
 make sure that if the trigger fails to execute, the user signup in auth.users fails.
-**# ✅ create_user_profile**
+# ✅ create_user_profile
 
 **1. Test 1: Customer Profile Creation**
     - **Steps:**
@@ -8,8 +8,6 @@ make sure that if the trigger fails to execute, the user signup in auth.users fa
     - **EXPECTED BEHAVIOR:**
         - A new row with corresponding data is created in the `customers` table.
         - The `raw_user_meta_data` is cleared in `auth.users` for the inserted user.
-    - **SUBTLE PITFALLS:**
-        - Ensure data types and constraints align between `auth.users` and `customers`.
 
 **2. Test 2: Admin Profile Creation**
     - **Steps:**
@@ -17,8 +15,6 @@ make sure that if the trigger fails to execute, the user signup in auth.users fa
     - **EXPECTED BEHAVIOR:**
         - A new row with corresponding data is created in the `admins` table.
         - The `raw_user_meta_data` is cleared in `auth.users` for the inserted user.
-    - **SUBTLE PITFALLS:**
-        - Ensure data types and constraints align between `auth.users` and `admins`.
 
 **3. Test 3: Unexpected Frontend Value**
     - **Steps:**
@@ -34,5 +30,3 @@ make sure that if the trigger fails to execute, the user signup in auth.users fa
     - **EXPECTED BEHAVIOR:**
         - The trigger automatically calls the function, creating the appropriate profile in either `customers` or `admins` based on `frontend` value.
         - The `raw_user_meta_data` is cleared in `auth.users`.
-    - **SUBTLE PITFALLS:**
-        - Test for potential performance implications of the trigger, especially under heavy insertion load.

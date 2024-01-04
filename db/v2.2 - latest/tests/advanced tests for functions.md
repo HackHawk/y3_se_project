@@ -1,6 +1,8 @@
 # Advanced tests - not done for now but worth considering before deployment 
 - transaction behavior
-- concurrency behavior
+- concurrency behavior and race conditions
+    - multiple concurrent purchases
+- Check for potential SQL injection vulnerabilities.
 
 ## delete_user
   - Multiple Attempts: Simulate scenarios where multiple processes or users try to delete the same user concurrently to test for race conditions or unexpected behavior.

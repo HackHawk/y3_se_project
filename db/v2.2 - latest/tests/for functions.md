@@ -92,108 +92,70 @@ Here are the tests for delete_user and insert_book, rewritten to resemble the fo
         - The update will fail with the error message "Cannot update book. Either the book has been soft-deleted or it does not exist".
 
 # ✅ retrieve_books
-**1. Data Retrieval Tests**
-- ~~**Test 1: Basic retrieval:**~~
-    - Steps: Call the function with no parameters: `SELECT * FROM retrieve_books();`
-    - Expected behavior: Returns all non-deleted books from the `books` table.
-- ~~**Test 2: Pattern-based retrieval:**~~    
-    - Steps: Test with various patterns, e.g., `SELECT * FROM retrieve_books('%adventure%');`
-    - Expected behavior: Correctly retrieves books based on the pattern in authors, title, or Amharic title.
-- ~~**Test 3: Genre-based retrieval:**~~
-    - Steps: Test with different genres, e.g., `SELECT * FROM retrieve_books(NULL, 'fantasy');`
-    - Expected behavior: Filters books by the specified genre.
-- ~~**Test 4: Combined retrieval:**~~
-    - Steps: Test with both pattern and genre parameters, e.g., `SELECT * FROM retrieve_books('%title%', 'Thriller');`
-    - Expected behavior: Combines filtering conditions accurately.
 
-**2. Parameter Handling Tests**
-- ~~**Test 5: Null parameters:**~~    
-    - Steps: Call the function with both parameters as null: `SELECT * FROM retrieve_books(NULL, NULL);`
-    - Expected behavior: Returns all non-deleted books.
-- ~~**Test 6: Single parameter tests:**~~
-    - Steps: Test with one parameter 
-    - Expected behavior: Correctly filters books based on the provided pattern.
+**1. Data Retrieval**
+    - **Test 1: Basic Retrieval**
+        - **Steps:**
+            - Call `SELECT * FROM retrieve_books();`
+        - **EXPECTED BEHAVIOR:**
+            - Returns all non-deleted books from `books` table.
+        - **SUBTLE PITFALLS:**
+            - Ensure correct handling of soft-deleted books.
 
-**3. Edge Case Tests**
-- ~~**Test 7: Invalid patterns:**~~
-    - Steps: Test with invalid patterns (e.g., empty strings, non-matching patterns).
-    - Expected behavior: Returns empty table
+    - **Test 2: Pattern-Based Retrieval**
+        - **Steps:**
+            - Test with various patterns (e.g., `SELECT * FROM retrieve_books('%adventure%');`)
+        - **EXPECTED BEHAVIOR:**
+             Correctly retrieves books whose attributes authors, title, or Amharic title match the pattern.
+        - **SUBTLE PITFALLS:**
+            - [ ] Verify case-sensitivity and special character handling.
 
-**4. Error Handling Tests**
-- ~~**Test 8: Invalid parameters:**~~
-    - Steps: Test with invalid parameter types or values.
-    - Expected behavior: Raises function does not exist error.
+    - **Test 3: Genre-Based Retrieval**
+        - **Steps:**
+            - Test with different genres (e.g., `SELECT * FROM retrieve_books(NULL, 'fantasy');`)
+        - **EXPECTED BEHAVIOR:**
+            - Filters books by the specified genre.
+        - **SUBTLE PITFALLS:**
+            - Ensure accurate case-sensitive genre matching.
+
+    - **Test 4: Combined Retrieval**
+        - **Steps:**
+            - Test with both pattern and genre (e.g., `SELECT * FROM retrieve_books('%title%', 'Thriller');`)
+        - **EXPECTED BEHAVIOR:**
+            - Correctly combines filtering conditions.
+        - **SUBTLE PITFALLS:**
+            - Verify precedence and logical combination of filters.
+
+**2. Parameter Handling**
+    - **Test 5: Null Parameters**
+        - **Steps:**
+            - Call `SELECT * FROM retrieve_books(NULL, NULL);`
+        - **EXPECTED BEHAVIOR:**
+            - Returns all non-deleted books.
+
+    - **Test 6: Single Parameter Tests**
+        - **Steps:**
+            - Test with patterns or genres individually.
+        - **EXPECTED BEHAVIOR:**
+            - Filters books based on the provided parameter.
+
+**3. Edge Cases**
+    - **Test 7: Invalid Patterns**
+        - **Steps:**
+            - Test with empty strings, non-matching patterns.
+        - **EXPECTED BEHAVIOR:**
+            - Returns an empty table.
+
+**4. Error Handling**
+    - **Test 8: Invalid Parameters**
+        - **Steps:**
+            - Call with invalid parameter types or values.
+        - **EXPECTED BEHAVIOR:**
+            - Raises appropriate error messages.
+        - **SUBTLE PITFALLS:**
+            - [ ] Test for unexpected error types or misleading messages.
 
 # ✅ buy_books
-**1. Valid Purchase Tests** 
-    - ~~**Test 1: Successful purchase**~~ 
-        - Steps: 
-            1. Insert a book with a quantity of `x`. 
-            2. Insert a customer. 
-            3. Call `buy_books(customer_id, book_id, x)`. 
-        
-        - Expected behavior: 
-            1. Quantity in the `books` table is updated to `quantity - x`. 
-            2. A new record is inserted into the `purchases` table with the correct data. 
-
-**2. Input Validation Tests**
-    - ~~**Test 2: Invalid quantity (less than 1)**~~ 
-        - Steps: 
-            1. Insert a book. 
-            2. Insert a customer. 
-            3. Call `buy_books(customer_id, book_id, 0)`. 
-        
-        - Expected behavior: 
-            1. Function raises the exception "Invalid quantity. Quantity of books inserted is less than 1 or NULL." 
-
-    - ~~**Test 4: NULL quantity**~~ 
-        - Steps: 
-            1. Insert a book. 
-            2. Insert a customer. 
-            3. Call `buy_books(customer_id, book_id, NULL)`. 
-                
-        - Expected behavior: 
-            1. Function raises the exception "Invalid quantity. Quantity of books inserted is less than 1 or NULL." 
-    
-    - ~~**Test 5: Invalid customer_id**~~ 
-        - Steps: 
-            1. Insert a book. 
-            2. Call `buy_books(nonexistent_customer_id, book_id, 2)`. 
-            
-        - Expected behavior: 
-            1. Function raises an exception stating that the inserted customer_id violates the fk constraint on the purchases relation - since there is no customer with the given id.
-    
-    - ~~**Test 6: Invalid book_id**~~ 
-        - Steps: 
-            1. Insert a customer. 
-            2. Call `buy_books(customer_id, nonexistent_book_id, 2)`. 
-            
-        - Expected behavior: 
-            1. Function raises an appropriate exception indicating an invalid book ID.
-
-**3. Availability Checks** 
-    - ~~**Test 7: Insufficient quantity**~~ 
-        - Steps: 
-            1. Insert a book with a quantity of 1. 
-            2. Insert a customer. 
-            3. Call `buy_books(customer_id, book_id, 2)`. 
-        
-        - Expected behavior: 
-            1. Function raises the exception "Book quantity specified exceeds quantity available."
-
-**4. Edge Case Tests** 
-    - ~~**Test 9: Attempting to purchase the last available book**~~ 
-        - Steps: 
-            1. Insert a book with a quantity of 1. 
-            2. Insert a customer. 
-            3. Call `buy_books(customer_id, book_id, 1)`. 
-        
-        - Expected behavior: 
-            1. Quantity in the `books` table is updated to 0. 
-            2. A new record is inserted into the `purchases` table with the correct data.
-
-# reformatted:
-## **✅ buy_books**
 
 **1. Valid Purchase**
     - **Test 1: Successful Purchase**
@@ -204,9 +166,6 @@ Here are the tests for delete_user and insert_book, rewritten to resemble the fo
         - **EXPECTED BEHAVIOR:**
             1. Quantity in `books` table becomes `quantity - x`.
             2. New record in `purchases` table with correct data.
-        - **SUBTLE PITFALLS:**
-            - Ensure consistent currency handling if applicable.
-            - Verify no race conditions under concurrent purchases.
 
 **2. Input Validation**
     - **Test 2: Invalid Quantity (< 1)**
@@ -215,9 +174,7 @@ Here are the tests for delete_user and insert_book, rewritten to resemble the fo
             2. Insert a customer.
             3. Call `buy_books(customer_id, book_id, 0)` or `buy_books(customer_id, book_id, NULL)`.
         - **EXPECTED BEHAVIOR:**
-            1. Exception: "Invalid quantity. Quantity must be greater than 0."
-        - **SUBTLE PITFALLS:**
-            - Check for potential SQL injection vulnerabilities.
+            1. Function raises the exception "Invalid quantity. Quantity of books inserted is less than 1 or NULL."            
 
     - **Test 3: Invalid Customer ID**
         - **Steps:**
@@ -234,8 +191,8 @@ Here are the tests for delete_user and insert_book, rewritten to resemble the fo
             2. Call `buy_books(customer_id, nonexistent_book_id, 2)`.
         - **EXPECTED BEHAVIOR:**
             1. Clear exception indicating invalid book ID.
-        - **SUBTLE PITFALLS:**
-            - Verify error message clarity for understanding the issue.
+        - **POSSIBLE IMPROVEMENT:**
+            - [ ] Verify error message clarity for understanding the issue.
 
 **3. Availability Checks**
     - **Test 5: Insufficient Quantity**
@@ -245,8 +202,6 @@ Here are the tests for delete_user and insert_book, rewritten to resemble the fo
             3. Call `buy_books(customer_id, book_id, 2)`.
         - **EXPECTED BEHAVIOR:**
             1. Exception: "Book quantity specified exceeds quantity available."
-        - **SUBTLE PITFALLS:**
-            - Consider handling edge cases like multiple concurrent purchases.
 
 **4. Edge Cases**
     - **Test 6: Purchasing Last Book**
@@ -257,81 +212,9 @@ Here are the tests for delete_user and insert_book, rewritten to resemble the fo
         - **EXPECTED BEHAVIOR:**
             1. Quantity in `books` table becomes 0.
             2. New record in `purchases` table with correct data.
-        - **SUBTLE PITFALLS:**
-            - Test behavior when attempting to purchase more books after quantity reaches 0.
-
-## **✅ retrieve_books**
-
-**1. Data Retrieval**
-    - **Test 1: Basic Retrieval**
-        - **Steps:**
-            - Call `SELECT * FROM retrieve_books();`
-        - **EXPECTED BEHAVIOR:**
-            - Returns all non-deleted books from `books` table.
-        - **SUBTLE PITFALLS:**
-            - Ensure correct handling of soft-deleted books (if applicable).
-
-    - **Test 2: Pattern-Based Retrieval**
-        - **Steps:**
-            - Test with various patterns (e.g., `SELECT * FROM retrieve_books('%adventure%');`)
-        - **EXPECTED BEHAVIOR:**
-            - Retrieves books matching the pattern in authors, title, or Amharic title.
-        - **SUBTLE PITFALLS:**
-            - Verify case-sensitivity and special character handling.
-
-    - **Test 3: Genre-Based Retrieval**
-        - **Steps:**
-            - Test with different genres (e.g., `SELECT * FROM retrieve_books(NULL, 'fantasy');`)
-        - **EXPECTED BEHAVIOR:**
-            - Filters books by the specified genre.
-        - **SUBTLE PITFALLS:**
-            - Ensure accurate genre matching and handling of potential typos.
-
-    - **Test 4: Combined Retrieval**
-        - **Steps:**
-            - Test with both pattern and genre (e.g., `SELECT * FROM retrieve_books('%title%', 'Thriller');`)
-        - **EXPECTED BEHAVIOR:**
-            - Correctly combines filtering conditions.
-        - **SUBTLE PITFALLS:**
-            - Verify precedence and logical combination of filters.
-
-**2. Parameter Handling**
-    - **Test 5: Null Parameters**
-        - **Steps:**
-            - Call `SELECT * FROM retrieve_books(NULL, NULL);`
-        - **EXPECTED BEHAVIOR:**
-            - Returns all non-deleted books.
-        - **SUBTLE PITFALLS:**
-            - Ensure consistent behavior with different database clients.
-
-    - **Test 6: Single Parameter Tests**
-        - **Steps:**
-            - Test with patterns or genres individually.
-        - **EXPECTED BEHAVIOR:**
-            - Filters books based on the provided parameter.
-        - **SUBTLE PITFALLS:**
-            - Verify correct handling of missing parameters.
-
-**3. Edge Cases**
-    - **Test 7: Invalid Patterns**
-        - **Steps:**
-            - Test with empty strings, non-matching patterns.
-        - **EXPECTED BEHAVIOR:**
-            - Returns an empty table.
-        - **SUBTLE PITFALLS:**
-            - Ensure meaningful error messages for debugging.
-
-**4. Error Handling**
-    - **Test 8: Invalid Parameters**
-        - **Steps:**
-            - Call with invalid parameter types or values.
-        - **EXPECTED BEHAVIOR:**
-            - Raises appropriate error messages.
-        - **SUBTLE PITFALLS:**
-            - Test for unexpected error types or misleading messages.
 
 
-# ❌ ~~delete_book~~ the tests will be similar but we won't have a delete book sql function since there isn't a way to delete the coverpages as well.
+# ❌ ~~delete_book~~ the tests will be similar but we won't have a delete book sql function since there isn't a way to delete the coverpages as from sql.
 
 **1. Functionality Tests**
 
