@@ -1,25 +1,23 @@
 -- ================================================================================================================ 
 -- ✅ Insert book function (Tested)
 -- ================================================================================================================
-
-CREATE OR REPLACE FUNCTION insert_book(
-        isbn BIGINT,
-        title TEXT,
-        amhr_title TEXT,
-        authors TEXT,
-        synopsis TEXT,
-        amhr_synopsis TEXT,
-        publisher TEXT,
-        publication_date DATE,
-        price DECIMAL(10, 2),
-        is_hardcover BOOLEAN,
-        quantity BIGINT,
-        genre TEXT DEFAULT NULL,
-        addition_tmstmp TIMESTAMPTZ DEFAULT NOW(), -- Set addition timestamp
-        cover_page_urls TEXT[] DEFAULT NULL
-    ) RETURNS VOID
-    LANGUAGE plpgsql
-    AS $$
+CREATE
+OR REPLACE FUNCTION insert_book (
+    isbn BIGINT,
+    title TEXT,
+    amhr_title TEXT,
+    authors TEXT,
+    synopsis TEXT,
+    amhr_synopsis TEXT,
+    publisher TEXT,
+    publication_date DATE,
+    price DECIMAL(10, 2),
+    is_hardcover BOOLEAN,
+    quantity BIGINT,
+    genre TEXT DEFAULT NULL,
+    addition_tmstmp TIMESTAMPTZ DEFAULT NOW(), -- Set addition timestamp
+    cover_page_urls TEXT[] DEFAULT NULL
+) RETURNS VOID LANGUAGE plpgsql AS $$
     BEGIN
         INSERT INTO books (
             isbn,
@@ -60,12 +58,9 @@ CREATE OR REPLACE FUNCTION insert_book(
 -- ================================================================================================================ 
 -- ✅ Delete user function (Tested)
 -- ================================================================================================================
-
 -- This function deletes a user if they are either an admin or a customer
-CREATE OR REPLACE FUNCTION delete_user(user_id UUID) 
-    RETURNS VOID
-    LANGUAGE plpgsql
-    AS $$ 
+CREATE
+OR REPLACE FUNCTION delete_user (user_id UUID) RETURNS VOID LANGUAGE plpgsql AS $$ 
     BEGIN 
         BEGIN
             -- Check if the user is a super admin
@@ -89,25 +84,23 @@ CREATE OR REPLACE FUNCTION delete_user(user_id UUID)
 -- ================================================================================================================ 
 -- ✅ Update book function (Tested)
 -- ================================================================================================================
-
-CREATE OR REPLACE FUNCTION update_book (
-        book_id BIGINT,
-        isbn BIGINT DEFAULT NULL,
-        title TEXT DEFAULT NULL,
-        amhr_title TEXT DEFAULT NULL,
-        authors TEXT DEFAULT NULL,
-        synopsis TEXT DEFAULT NULL,
-        amhr_synopsis TEXT DEFAULT NULL,
-        genre TEXT DEFAULT NULL,
-        publisher TEXT DEFAULT NULL,
-        publication_date DATE DEFAULT NULL,
-        price DECIMAL(10, 2) DEFAULT NULL,
-        is_hardcover BOOLEAN DEFAULT NULL,
-        quantity BIGINT DEFAULT NULL,
-        cover_page_urls TEXT[] DEFAULT NULL
-    ) RETURNS VOID
-    LANGUAGE plpgsql
-    AS $$
+CREATE
+OR REPLACE FUNCTION update_book (
+    book_id BIGINT,
+    isbn BIGINT DEFAULT NULL,
+    title TEXT DEFAULT NULL,
+    amhr_title TEXT DEFAULT NULL,
+    authors TEXT DEFAULT NULL,
+    synopsis TEXT DEFAULT NULL,
+    amhr_synopsis TEXT DEFAULT NULL,
+    genre TEXT DEFAULT NULL,
+    publisher TEXT DEFAULT NULL,
+    publication_date DATE DEFAULT NULL,
+    price DECIMAL(10, 2) DEFAULT NULL,
+    is_hardcover BOOLEAN DEFAULT NULL,
+    quantity BIGINT DEFAULT NULL,
+    cover_page_urls TEXT[] DEFAULT NULL
+) RETURNS VOID LANGUAGE plpgsql AS $$
     BEGIN
         IF EXISTS (SELECT 1 FROM books WHERE books.book_id = update_book.book_id AND books.is_deleted = FALSE) THEN
             UPDATE books
@@ -134,32 +127,29 @@ CREATE OR REPLACE FUNCTION update_book (
 -- ================================================================================================================ 
 -- ✅ Read book function (Tested)
 -- ================================================================================================================
-
 -- This query excludes respects is_deleted when retrieveing a book with the specified pattern or isbn.
-CREATE OR REPLACE FUNCTION retrieve_books (
-        pattern TEXT DEFAULT NULL, 
-        genre_param TEXT DEFAULT NULL
-    )
-    RETURNS TABLE ( 
-        book_id BIGINT,
-        isbn BIGINT,
-        title TEXT,
-        amhr_title TEXT,
-        authors TEXT,
-        synopsis TEXT,
-        amhr_synopsis TEXT,
-        genre TEXT,
-        publisher TEXT,
-        publication_date DATE,
-        price DECIMAL(10, 2),
-        is_hardcover BOOLEAN,
-        average_rating DECIMAL(2, 1),
-        quantity BIGINT,
-        addition_tmstmp TIMESTAMPTZ,
-        cover_page_urls TEXT[]
-    ) 
-    LANGUAGE plpgsql
-    AS $$
+CREATE
+OR REPLACE FUNCTION retrieve_books (
+    pattern TEXT DEFAULT NULL,
+    genre_param TEXT DEFAULT NULL
+) RETURNS TABLE (
+    book_id BIGINT,
+    isbn BIGINT,
+    title TEXT,
+    amhr_title TEXT,
+    authors TEXT,
+    synopsis TEXT,
+    amhr_synopsis TEXT,
+    genre TEXT,
+    publisher TEXT,
+    publication_date DATE,
+    price DECIMAL(10, 2),
+    is_hardcover BOOLEAN,
+    average_rating DECIMAL(2, 1),
+    quantity BIGINT,
+    addition_tmstmp TIMESTAMPTZ,
+    cover_page_urls TEXT[]
+) LANGUAGE plpgsql AS $$
     BEGIN
         RETURN QUERY 
             SELECT 
@@ -206,23 +196,14 @@ CREATE OR REPLACE FUNCTION retrieve_books (
 
 -- Call the function like this:
 -- SELECT * FROM retrieve_books('%t%');
-
 -- ================================================================================================================ 
 -- REMOVED - Delete book function - this is cause we can't delete files (coverpages) from the bucket using sql
 -- ================================================================================================================
-
 -- ================================================================================================================ 
--- ✅ Book purchase function (Tested) -- QUESTION Should we have a maximum allowable quantity?
+-- ✅ Book purchase function (Tested)
 -- ================================================================================================================
-
-CREATE OR REPLACE FUNCTION buy_books(
-        customer_id UUID,
-        book_id BIGINT,
-        quantity BIGINT
-    )
-    RETURNS VOID
-    LANGUAGE plpgsql
-    AS $$
+CREATE
+OR REPLACE FUNCTION buy_books (customer_id UUID, book_id BIGINT, quantity BIGINT) RETURNS VOID LANGUAGE plpgsql AS $$
     DECLARE
         book_quantity INTEGER;
         book_price NUMERIC;
@@ -257,5 +238,3 @@ CREATE OR REPLACE FUNCTION buy_books(
         VALUES (buy_books.customer_id, buy_books.book_id, book_price * quantity);
     END;
     $$;
-    
-    

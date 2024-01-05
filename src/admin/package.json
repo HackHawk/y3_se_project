@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint ./",
+    "lint-fix": "eslint ./ --fix",
+    "format": "prettier --check --ignore-path .gitignore .",
+    "format-fix": "prettier --write --list-different . --ignore-path .gitignore ."
   },
   "dependencies": {
     "@nextui-org/react": "^2.2.9",
