@@ -16,7 +16,7 @@ You are going to follow the steps for **_BOTH_** `./src/admin` and `./src/client
 
    - This works because the `package.json` is shared through the GitHub repo.
    - Alternatively, you can use the following command to install instead.
-     - `npm i -D eslint prettier eslint-plugin-prettier eslint-config-next eslint-config-prettier prettier-plugin-tailwindcss`
+     - `npm i -D eslint prettier eslint-plugin-prettier eslint-config-next eslint-config-prettier eslint-plugin-import prettier-plugin-tailwindcss`
 
 3. Go to your VSCode settings, then type "code actions" in the search bar then choose the option that says "Code actions on save" then press "Edit in `settings.json`". Set the following properties as follows:
 
@@ -70,7 +70,13 @@ You are going to follow the steps for **_BOTH_** `./src/admin` and `./src/client
 
 ```json
 {
-  "extends": ["airbnb", "prettier", "next", "next/core-web-vitals"],
+  "extends": [
+    "airbnb",
+    "prettier",
+    "next",
+    "next/core-web-vitals",
+    "plugin:import/recommended"
+  ],
   "plugins": ["prettier"],
   "rules": {
     "prettier/prettier": "error",
@@ -114,12 +120,16 @@ To prevent formatting conflicts between the two, install the plugin `eslint-conf
 # Further reading
 
 - Decomposing the command: `npm i -D eslint prettier eslint-plugin-prettier eslint-config-next eslint-config-prettier prettier-plugin-tailwindcss`
+
   - `-D`: installs as a dev depencency
   - `eslint prettier`: installs eslint and prettier
   - `eslint-plugin-prettier`: runs Prettier as an ESLint rule and reports differences as individual ESLint issues.
   - `eslint-config-next`: configures ESLint with preconfigured NextJS rules
   - `eslint-config-prettier`: turns off all rules that are unnecessary or might conflict with Prettier.
   - `prettier-plugin-tailwindcss`: a Prettier v3+ plugin for Tailwind CSS v3.0+ that automatically sorts classes based on our recommended class order.
+  - `eslint-plugin-import`: This plugin intends to support linting of ES2015+ (ES6+) import/export syntax, and prevent issues with misspelling of file paths and import names.
+
+- Go visit the package pages on https://www.npmjs.com/ for more info on the plugins.
 
 ## References
 
