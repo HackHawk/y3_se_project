@@ -46,7 +46,7 @@ You are going to follow the steps for **_BOTH_** `./src/admin` and `./src/client
 
 **_Continue if you're starting from scratch - you aren't if you have cloned this repo from GitHub:_**
 
-4. Go to your `package.json` file and replace the `scripts` property as follows:
+5. Go to your `package.json` file and replace the `scripts` property as follows:
 
 ```json
 "scripts": {
@@ -60,7 +60,7 @@ You are going to follow the steps for **_BOTH_** `./src/admin` and `./src/client
  }
 ```
 
-5. Create a `.prettierrc.json` file and paste the following contents:
+6. Create a `.prettierrc.json` file and paste the following contents:
 
 ```json
 {
@@ -73,7 +73,7 @@ You are going to follow the steps for **_BOTH_** `./src/admin` and `./src/client
 }
 ```
 
-6. Create an `.eslintrc.json` file and paste the following contents:
+7. Create an `.eslintrc.json` file and paste the following contents:
 
 ```json
 {
