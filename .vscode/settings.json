@@ -1,3 +1,4 @@
 {
-    "todo-tree.tree.scanMode": "workspace"
+  "todo-tree.tree.scanMode": "workspace",
+  "eslint.workingDirectories": ["./src/admin", "./src/client"]
 }

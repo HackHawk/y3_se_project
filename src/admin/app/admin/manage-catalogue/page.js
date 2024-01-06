@@ -1,12 +1,9 @@
-import AddBooksForm from "@/components/Form/Form";
+import AddBooksForm from '@/components/Form/Form';
 
-const page = () => {
+const page = () => (
+  <div>
+    <AddBooksForm />
+  </div>
+);
 
-  return (
-    <div>
-      <AddBooksForm />
-    </div>
-  )
-}
-
-export default page
+export default page;

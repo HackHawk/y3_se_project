@@ -37,6 +37,13 @@ You are going to follow the steps for **_BOTH_** `./src/admin` and `./src/client
     }
 ```
 
+4. Go to the `.vscode` directory at the top level of your project.
+   add the following property to your `settings.json` file. This file sets your project/workspace settings.
+
+```json
+  "eslint.workingDirectories": ["./src/admin", "./src/client"]
+```
+
 **_Continue if you're starting from scratch - you aren't if you have cloned this repo from GitHub:_**
 
 4. Go to your `package.json` file and replace the `scripts` property as follows:
@@ -126,8 +133,9 @@ To prevent formatting conflicts between the two, install the plugin `eslint-conf
   - `eslint-plugin-prettier`: runs Prettier as an ESLint rule and reports differences as individual ESLint issues.
   - `eslint-config-next`: configures ESLint with preconfigured NextJS rules
   - `eslint-config-prettier`: turns off all rules that are unnecessary or might conflict with Prettier.
-  - `prettier-plugin-tailwindcss`: a Prettier v3+ plugin for Tailwind CSS v3.0+ that automatically sorts classes based on our recommended class order.
+  - `prettier-plugin-tailwindcss`: a Prettier v3lugin for Tailwind CSS v3.0+ that automatically sorts classes based on our recommended class order.
   - `eslint-plugin-import`: This plugin intends to support linting of ES2015+ (ES6+) import/export syntax, and prevent issues with misspelling of file paths and import names.
+  - `eslint-config-airbnb`: This package provides Airbnb's .eslintrc as an extensible shared config.
 
 - Go visit the package pages on https://www.npmjs.com/ for more info on the plugins.
 

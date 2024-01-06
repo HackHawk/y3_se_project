@@ -1,14 +1,13 @@
-"use client";
+'use client';
 
-import { Button } from "@nextui-org/react";
-import { useState } from "react";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { redirect } from "next/navigation";
-import { toast, ToastContainer } from "react-toastify";
-import { useRouter } from "next/navigation";
+import { Button } from '@nextui-org/react';
+import { useState } from 'react';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { redirect, useRouter } from 'next/navigation';
+import { toast, ToastContainer } from 'react-toastify';
 
 const page = () => {
-  const [newPassword, setNewPassword] = useState("");
+  const [newPassword, setNewPassword] = useState('');
   const router = useRouter();
 
   const supabase = createClientComponentClient();
@@ -25,58 +24,56 @@ const page = () => {
         }
 
         if (!res.error) {
-            alert("Password Changed Successfully!")
-            router.push("/")
+          alert('Password Changed Successfully!');
+          router.push('/');
         }
       })
       .catch((error) => {
         // Handle errors
-        console.error("Error with creating new Password:", error.message);
+        console.error('Error with creating new Password:', error.message);
         toast.error(error.message, {
-          position: "top-right",
+          position: 'top-right',
           autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: false,
           draggable: true,
           progress: undefined,
-          theme: "light",
+          theme: 'light',
         });
-      })
+      });
   };
 
   return (
-    <>
-          <main className="w-full h-screen flex flex-col items-center justify-center px-4">
-      <div className="max-w-sm w-full text-gray-600">
-      <label className="font-medium">Enter New Password</label>
-      <input
-        type="password"
-        name="password"
-        value={newPassword}
-        onChange={(e) => setNewPassword(e.target.value)}
-        placeholder="password"
-        required
-        className="w-full mt-2 mb-5 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
-      />
-      <Button color="primary" onClick={handlePasswordChange}>
-        Reset Password
-      </Button>
-      <ToastContainer
-            position="top-right"
-            autoClose={2000}
-            hideProgressBar={false}
-            newestOnTop
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover={false}
-            theme="light"
-          />
-          </div>
-          </main>
-    </>
+    <main className='flex h-screen w-full flex-col items-center justify-center px-4'>
+      <div className='w-full max-w-sm text-gray-600'>
+        <label className='font-medium'>Enter New Password</label>
+        <input
+          type='password'
+          name='password'
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
+          placeholder='password'
+          required
+          className='mb-5 mt-2 w-full rounded-lg border bg-transparent px-3 py-2 text-gray-500 shadow-sm outline-none focus:border-indigo-600'
+        />
+        <Button color='primary' onClick={handlePasswordChange}>
+          Reset Password
+        </Button>
+        <ToastContainer
+          position='top-right'
+          autoClose={2000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover={false}
+          theme='light'
+        />
+      </div>
+    </main>
   );
 };
 

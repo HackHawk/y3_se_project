@@ -1,15 +1,10 @@
-import DisplayNavbar from '@/components/Navbar/DisplayNavbar'
+import DisplayNavbar from '@/components/Navbar/DisplayNavbar';
 
-const adminLayout = ({ children }) => {
-  return (
-    <div suppressHydrationWarning>
+const adminLayout = ({ children }) => (
+  <div suppressHydrationWarning>
     <DisplayNavbar />
-    <div>
-        
-        {children}
-    </div>
-    </div>
-  )
-}
+    <div>{children}</div>
+  </div>
+);
 
-export default adminLayout
+export default adminLayout;

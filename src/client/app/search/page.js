@@ -6,8 +6,8 @@ import DisplayPagination from "@/components/Pagination/Pagination";
 import Searchbar from "@/components/Searchbar/Searchbar";
 import CardSkeleton from "@/components/Skeleton/CardSkeleton";
 import BookList from "@/components/BookList/BookList";
-import useBooks from "@/hooks/useBooks";
-import useGenres from "@/hooks/useGenres";
+import useBooks from "@/app/hooks/useBooks";
+import useGenres from "@/app/hooks/useGenres";
 
 export default function page() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -74,12 +74,12 @@ export default function page() {
         {/* Display Pagination */}
         {books.length >= 1 && (
           <div className="items-center">
-          <DisplayPagination
-            totalItems={books.length}
-            itemsPerPage={defaultPageSize}
-            currentPage={currentPage}
-            onPageChange={onPageChange}
-          />
+            <DisplayPagination
+              totalItems={books.length}
+              itemsPerPage={defaultPageSize}
+              currentPage={currentPage}
+              onPageChange={onPageChange}
+            />
           </div>
         )}
       </div>

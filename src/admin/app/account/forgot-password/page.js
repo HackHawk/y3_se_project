@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { Button, Input } from "@nextui-org/react";
-import { useState } from "react";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { Button, Input } from '@nextui-org/react';
+import { useState } from 'react';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 const page = () => {
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState('');
 
   const supabase = createClientComponentClient();
 
@@ -16,36 +16,33 @@ const page = () => {
 
     try {
       await supabase.auth.resetPasswordForEmail(e.target.email.value, {
-        redirectTo: "http://localhost:3000/account/update-password",
+        redirectTo: 'http://localhost:3000/account/update-password',
       });
-
     } catch (error) {
       console.error(error);
     }
   };
 
   return (
-    <>
-        <main className="w-full h-screen flex flex-col items-center justify-center px-4">
-      <div className="max-w-sm w-full text-gray-600">
-    <form onSubmit={handleReset}>
-      <label className="font-medium">Email</label>
-      <input
-        type="email"
-        name="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Email"
-        required
-        className="w-full mt-2 mb-5 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
-      />
-      <Button color="primary" type="submit">
-        Reset Password
-      </Button>
-      </form>
+    <main className='flex h-screen w-full flex-col items-center justify-center px-4'>
+      <div className='w-full max-w-sm text-gray-600'>
+        <form onSubmit={handleReset}>
+          <label className='font-medium'>Email</label>
+          <input
+            type='email'
+            name='email'
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder='Email'
+            required
+            className='mb-5 mt-2 w-full rounded-lg border bg-transparent px-3 py-2 text-gray-500 shadow-sm outline-none focus:border-indigo-600'
+          />
+          <Button color='primary' type='submit'>
+            Reset Password
+          </Button>
+        </form>
       </div>
-      </main>
-    </>
+    </main>
   );
 };
 
