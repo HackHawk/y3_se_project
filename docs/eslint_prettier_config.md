@@ -16,7 +16,7 @@ You are going to follow the steps for **_BOTH_** `./src/admin` and `./src/client
 
    - This works because the `package.json` is shared through the GitHub repo.
    - Alternatively, you can use the following command to install instead.
-     - `npm i -D eslint prettier eslint-plugin-prettier eslint-config-next eslint-config-prettier eslint-plugin-import prettier-plugin-tailwindcss`
+     - `npm i -D eslint prettier eslint-config-airbnb eslint-plugin-prettier eslint-config-next eslint-config-prettier eslint-plugin-import prettier-plugin-tailwindcss`
 
 3. Go to your VSCode settings, then type "code actions" in the search bar then choose the option that says "Code actions on save" then press "Edit in `settings.json`". Set the following properties as follows:
 
