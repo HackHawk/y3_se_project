@@ -16,7 +16,7 @@ You are going to follow the steps for **_BOTH_** `./src/admin` and `./src/client
 
    - This works because the `package.json` is shared through the GitHub repo.
    - Alternatively, you can use the following command to install instead.
-     - `npm i -D eslint prettier eslint-config-airbnb eslint-plugin-prettier eslint-config-next eslint-config-prettier eslint-plugin-import prettier-plugin-tailwindcss`
+     - `npm i -D eslint prettier eslint-config-airbnb eslint-plugin-prettier eslint-config-next eslint-config-prettier eslint-plugin-import prettier-plugin-tailwindcss eslint-import-resolver-alias`
 
 3. Go to your VSCode settings, then type "code actions" in the search bar then choose the option that says "Code actions on save" then press "Edit in `settings.json`". Set the following properties as follows:
 
@@ -84,6 +84,16 @@ You are going to follow the steps for **_BOTH_** `./src/admin` and `./src/client
     "next/core-web-vitals",
     "plugin:import/recommended"
   ],
+  "settings": {
+    "import/resolver": {
+      "alias": {
+        "map": [["@/components", "./components"]]
+      },
+      "node": {
+        "extensions": [".js", ".jsx"]
+      }
+    }
+  },
   "plugins": ["prettier"],
   "rules": {
     "prettier/prettier": "error",
@@ -92,7 +102,10 @@ You are going to follow the steps for **_BOTH_** `./src/admin` and `./src/client
     "func-names": "off",
     "no-process-exit": "off",
     "object-shorthand": "off",
-    "class-methods-use-this": "off"
+    "class-methods-use-this": "off",
+    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
+    "import/no-unresolved": "off",
+    "import/extensions": ["off", "never"]
   }
 }
 ```
@@ -136,6 +149,7 @@ To prevent formatting conflicts between the two, install the plugin `eslint-conf
   - `prettier-plugin-tailwindcss`: a Prettier v3lugin for Tailwind CSS v3.0+ that automatically sorts classes based on our recommended class order.
   - `eslint-plugin-import`: This plugin intends to support linting of ES2015+ (ES6+) import/export syntax, and prevent issues with misspelling of file paths and import names.
   - `eslint-config-airbnb`: This package provides Airbnb's .eslintrc as an extensible shared config.
+  - `eslint-import-resolver-alias`: This is a simple Node.js module import resolution plugin for `eslint-plugin-import`, which supports native Node.js module resolution, module alias/mapping and customer file extensions.
 
 - Go visit the package pages on https://www.npmjs.com/ for more info on the plugins.
 

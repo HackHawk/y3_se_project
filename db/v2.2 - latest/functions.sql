@@ -238,3 +238,21 @@ OR REPLACE FUNCTION buy_books (customer_id UUID, book_id BIGINT, quantity BIGINT
         VALUES (buy_books.customer_id, buy_books.book_id, book_price * quantity);
     END;
     $$;
+
+-- ================================================================================================================ 
+-- ✅ Admin check function
+-- ================================================================================================================
+CREATE
+OR REPLACE FUNCTION is_admin () RETURNS BOOLEAN LANGUAGE plpgsql AS $$
+BEGIN
+    IF EXISTS (
+        SELECT admin_id FROM public.admins WHERE admin_id = auth.uid() 
+        UNION 
+        SELECT sp_admin_id FROM public.sp_admin WHERE sp_admin_id = auth.uid()
+    ) THEN
+    RETURN TRUE;
+    ELSE 
+    RETURN FALSE;
+    END IF;
+END;
+$$;

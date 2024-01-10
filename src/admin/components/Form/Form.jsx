@@ -1,11 +1,11 @@
 'use client';
 
-import { addBooks } from '@/app/hooks/addBooks';
 import { Select, SelectItem } from '@nextui-org/react';
 import { useState, useEffect } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
+import addBooks from '@/app/lib/addBooks';
 
-const AddBooksForm = () => {
+function AddBooksForm() {
   // State to hold formData
   const [formData, setFormData] = useState(null);
 
@@ -26,8 +26,10 @@ const AddBooksForm = () => {
             toast.success('Book added successfully');
           } else {
             toast.error(response?.message);
+            throw response;
           }
         } catch (error) {
+          console.log(error);
           toast.error('An error occurred');
         }
 
@@ -216,6 +218,6 @@ const AddBooksForm = () => {
       </main>
     </>
   );
-};
+}
 
 export default AddBooksForm;

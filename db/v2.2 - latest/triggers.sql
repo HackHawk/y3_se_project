@@ -13,8 +13,8 @@
 --         }
 --     }
 -- });
-
-CREATE OR REPLACE FUNCTION create_user_profile() RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER AS $$
+CREATE
+OR REPLACE FUNCTION create_user_profile () RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER AS $$
 BEGIN
   BEGIN
     IF (NEW.raw_user_meta_data ->> 'frontend')::TEXT = 'CUSTOMER' THEN
@@ -48,6 +48,7 @@ BEGIN
 END;
 $$;
 
-CREATE OR REPLACE TRIGGER create_user_profile_trigger
-BEFORE INSERT ON auth.users FOR EACH ROW
-EXECUTE FUNCTION create_user_profile();
+CREATE
+OR REPLACE TRIGGER create_user_profile_trigger
+AFTER INSERT ON auth.users FOR EACH ROW
+EXECUTE FUNCTION create_user_profile ();

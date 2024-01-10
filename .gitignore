@@ -37,6 +37,6 @@ yarn-error.log*
 test-dir/
 
 # ignoring eslint config files - for now
-./src/*/.eslintrc.json
-./src/*/.prettierrc.json
+src/**/.eslintrc.json
+src/**/.prettierrc.json
 

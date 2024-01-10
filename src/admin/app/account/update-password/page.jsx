@@ -3,10 +3,10 @@
 import { Button } from '@nextui-org/react';
 import { useState } from 'react';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { redirect, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { toast, ToastContainer } from 'react-toastify';
 
-const page = () => {
+export default function page() {
   const [newPassword, setNewPassword] = useState('');
   const router = useRouter();
 
@@ -24,7 +24,7 @@ const page = () => {
         }
 
         if (!res.error) {
-          alert('Password Changed Successfully!');
+          toast.success('Password changed successfully');
           router.push('/');
         }
       })
@@ -75,6 +75,4 @@ const page = () => {
       </div>
     </main>
   );
-};
-
-export default page;
+}

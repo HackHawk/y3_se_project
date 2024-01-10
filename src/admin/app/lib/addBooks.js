@@ -3,7 +3,7 @@
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 
-export async function addBooks(formData) {
+export default async function addBooks(formData) {
   // Extracting values from formData
   const title = formData.get('title');
   const titleAmharic = formData.get('titleAmharic');
@@ -30,15 +30,15 @@ export async function addBooks(formData) {
   }
 
   // Validating quantity and price
-  if (isNaN(quantity) || quantity <= 0) {
+  if (Number.isNaN(quantity) || quantity <= 0) {
     return { message: 'Quantity must be a positive number.' };
   }
-  if (isNaN(price) || price <= 0) {
+  if (Number.isNaN(price) || price <= 0) {
     return { message: 'Price must be a positive number.' };
   }
 
   // Validating ISBN
-  if (isbn && (isbn.length != 10 || isbn.length != 13)) {
+  if (isbn && (isbn.length === 10 || isbn.length === 13)) {
     return { message: 'Invalid ISBN. It should be 10 or 13 characters long.' };
   }
 
@@ -62,16 +62,17 @@ export async function addBooks(formData) {
   const cookieStore = cookies();
   const supabase = createServerComponentClient({ cookies: () => cookieStore });
 
-  // Use the JS library to create a bucket.
-
   if (isbn) {
-    const { data: isbnList, error } = await supabase
-      .from('books')
-      .select('isbn');
+    const { data: isbnList, error } = await supabase.rpc('retrieve_books');
     for (let i = 0; i < isbnList.length; i++) {
       if (isbn === isbnList[i].isbn) {
         return { message: 'ISBN already exists in catalogue' };
       }
+    }
+
+    if (error) {
+      console.log(error);
+      return { message: error.message };
     }
   }
 
@@ -79,56 +80,54 @@ export async function addBooks(formData) {
     data: { session },
   } = await supabase.auth.getSession();
   const user = session?.user;
+  console.log(user);
 
   if (!user) {
-    console.error('User is not authenticated');
+    console.log('User is not authenticated');
     return { message: 'User is not authenticated' };
   }
 
   // Handling File Upload
-  // const coverPageUrl = [];
-  // if (files && files.length > 0) {
-  //   for (let i = 0; i < files.length; i++) {
-  //     const file = files[i];
-  //     const fileExtension = file.name.split(".").pop();
-  //     const fileName = `${title}-${Date.now()}`;
-  //     const { data: uploadData, error: uploadError } = await supabase.storage
-  //       .from("coverpages")
-  //       .upload(fileName, file);
+  const coverPageUrl = [];
+  if (files && files.length > 0) {
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const fileExtension = file.name.split('.').pop();
+      const fileName = `${title}-${Date.now()}`;
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from('coverpages')
+        .upload(fileName, file);
 
-  //     if (uploadError) {
-  //       console.error(uploadError);
-  //       return { message: "Error uploading file" };
-  //     }
-  //     coverPageUrl.push(uploadData.path);
-  //   }
-  // }
+      if (uploadError) {
+        console.log(uploadError);
+        return { message: 'Error uploading file' };
+      }
+      coverPageUrl.push(uploadData.path);
+    }
+  }
 
-  // console.log(coverPageUrl);
+  console.log(coverPageUrl);
 
-  const { data, error } = await supabase.from('books').insert([
-    {
-      title: title,
-      amhr_title: titleAmharic,
-      isbn: isbn,
-      authors: author,
-      genre: genre,
-      synopsis: synopsis,
-      amhr_synopsis: synopsisAmharic,
-      publisher: publisher,
-      publication_date: publicationDate,
-      is_hardcover: printVersion,
-      language: language,
-      quantity: quantity,
-      price: price,
-      cover_page: coverPageUrl, // add the URL/path of the uploaded file
-    },
-  ]);
+  const { data, error } = await supabase.rpc('insert_book', {
+    title: title,
+    amhr_title: titleAmharic,
+    isbn: isbn,
+    authors: author,
+    genre: genre,
+    synopsis: synopsis,
+    amhr_synopsis: synopsisAmharic,
+    publisher: publisher,
+    publication_date: publicationDate,
+    is_hardcover: printVersion,
+    quantity: quantity,
+    price: price,
+    cover_page_urls: coverPageUrl, // add the URL/path of the uploaded file
+  });
 
-  // if (error) {
-  //   console.error("Error Inserting Data", error);
-  //   return { message: "Error Inserting Data" };
-  // }
+  if (error) {
+    console.log('Error Inserting Data', error);
+    return { message: 'Error Inserting Data' };
+  }
 
   //   revalidatePath('/admin/manage-catalogue')
 

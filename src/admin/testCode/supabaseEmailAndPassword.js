@@ -63,7 +63,7 @@ export default function LoginPage() {
     return (
       <>
         <p>You are logged in.{user.email}</p>
-        <button onClick={handleLogout}>Logout</button>
+        <button onPress={handleLogout}>Logout</button>
       </>
     );
   }
@@ -89,13 +89,13 @@ export default function LoginPage() {
             className='mb-4 w-full rounded-md border border-gray-700 bg-gray-800 p-3 text-white placeholder-gray-500 focus:border-blue-500 focus:outline-none'
           />
           <button
-            onClick={handleSignUp}
+            onPress={handleSignUp}
             className='mb-2 w-full rounded-md bg-blue-600 p-3 text-white hover:bg-blue-700 focus:outline-none'
           >
             Sign Up
           </button>
           <button
-            onClick={handleSignIn}
+            onPress={handleSignIn}
             className='w-full rounded-md bg-gray-700 p-3 text-white hover:bg-gray-600 focus:outline-none'
           >
             Sign In
@@ -144,7 +144,7 @@ export default function LoginPage() {
               />
             </div>
             <button
-              onClick={handleSignIn}
+              onPress={handleSignIn}
               className='w-full rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white duration-150 hover:bg-indigo-500 active:bg-indigo-600'
             >
               Sign in
