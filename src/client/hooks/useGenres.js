@@ -7,9 +7,9 @@ const useGenres = () => {
   useEffect(() => {
     async function fetchGenres() {
       try {
-        const { data, error } = await supabase.rpc("get_distinct_genres");
+        const { data: genresData, error } = await supabase.from("genres").select();
         if (error) throw error;
-        setGenres(data);
+        setGenres(genresData);
       } catch (error) {
         console.error("Error in fetching genres:", error);
       }

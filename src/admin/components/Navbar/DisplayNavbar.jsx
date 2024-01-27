@@ -3,8 +3,7 @@
 
 import {Navbar, NavbarBrand, NavbarMenuToggle, NavbarMenuItem, NavbarMenu, NavbarContent, NavbarItem, Link, Button} from "@nextui-org/react";
 import { useState } from "react";
-import UserDropdown from "./UserDropdown.jsx";
-
+import UserDropdown from "./UserDropdown";
  const DisplayNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 

@@ -1,6 +1,7 @@
 "use server";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
+import supabaseClient from "./supabaseClient";
 
 export async function addBooks(formData) {
   // Extracting values from formData
@@ -58,6 +59,9 @@ export async function addBooks(formData) {
     printVersion = 0;
   }
 
+  // Create supabase handler using the cookies available
+  // cookies function allows to read the HTTP incoming request cookies from a 
+  // Server Component or write outgoing request cookies in a Server Action or Route Handler.
   const cookieStore = cookies();
   const supabase = createServerComponentClient({ cookies: () => cookieStore });
 
@@ -78,7 +82,6 @@ export async function addBooks(formData) {
     data: { session },
   } = await supabase.auth.getSession();
   const user = session?.user;
-  console.log(user);
 
   if (!user) {
     console.error("User is not authenticated");

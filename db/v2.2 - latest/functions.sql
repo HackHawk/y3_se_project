@@ -136,76 +136,71 @@ CREATE OR REPLACE FUNCTION update_book (
 -- ================================================================================================================
 
 -- This query excludes respects is_deleted when retrieveing a book with the specified pattern or isbn.
-CREATE OR REPLACE FUNCTION retrieve_books (
-        pattern TEXT DEFAULT NULL, 
-        genre_param TEXT DEFAULT NULL
-    )
-    RETURNS TABLE ( 
-        book_id BIGINT,
-        isbn BIGINT,
-        title TEXT,
-        amhr_title TEXT,
-        authors TEXT,
-        synopsis TEXT,
-        amhr_synopsis TEXT,
-        genre TEXT,
-        publisher TEXT,
-        publication_date DATE,
-        price DECIMAL(10, 2),
-        is_hardcover BOOLEAN,
-        average_rating DECIMAL(2, 1),
-        quantity BIGINT,
-        addition_tmstmp TIMESTAMPTZ,
-        cover_page_urls TEXT[]
-    ) 
-    LANGUAGE plpgsql
-    AS $$
-    BEGIN
-        RETURN QUERY 
-            SELECT 
-                books.book_id,
-                books.isbn,
-                books.title,
-                books.amhr_title,
-                books.authors,
-                books.synopsis,
-                books.amhr_synopsis,
-                books.genre,
-                books.publisher,
-                books.publication_date,
-                books.price,
-                books.is_hardcover,
-                books.average_rating,
-                books.quantity,
-                books.addition_tmstmp,
-                books.cover_page_urls
-            FROM
-                books
-            WHERE 
-                CASE 
-                    WHEN pattern IS NULL AND genre_param IS NULL THEN -- When pattern and genre_param are not given then 
-                        books.is_deleted = FALSE
-                    WHEN pattern IS NULL AND genre_param IS NOT NULL THEN
-                        books.is_deleted = FALSE AND books.genre = genre_param
-                    WHEN pattern IS NOT NULL AND genre_param IS NULL THEN
-                        books.is_deleted = FALSE AND (
-                            books.authors ILIKE pattern OR
-                            books.title ILIKE pattern OR
-                            books.amhr_title ILIKE pattern
-                        )
-                    ELSE 
-                        books.is_deleted = FALSE AND (
-                            books.authors ILIKE pattern OR
-                            books.title ILIKE pattern OR
-                            books.amhr_title ILIKE pattern
-                        ) AND books.genre = genre_param
-                END;
+-- It searches using author, and title, as well an array of genres
+-- If genre_param is not NULL, (genre_param = ARRAY[]::TEXT[] OR ...) checks whether genre_param is an empty array. ARRAY[]::TEXT[] 
+-- represents an empty array of text type. If genre_param is an empty array, it means that no specific genre filtering is requested, 
+-- and it allows all rows to pass this condition as well.
 
-    END;
-    $$;
+CREATE OR REPLACE FUNCTION retrieve_books (
+    pattern TEXT DEFAULT NULL, 
+    genre_param TEXT[] DEFAULT NULL
+)
+RETURNS TABLE ( 
+    book_id BIGINT,
+    isbn BIGINT,
+    title TEXT,
+    amhr_title TEXT,
+    authors TEXT,
+    synopsis TEXT,
+    amhr_synopsis TEXT,
+    genre TEXT,
+    publisher TEXT,
+    publication_date DATE,
+    price DECIMAL(10, 2),
+    is_hardcover BOOLEAN,
+    average_rating DECIMAL(2, 1),
+    quantity BIGINT,
+    addition_tmstmp TIMESTAMPTZ,
+    cover_page_urls TEXT[]
+) 
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    RETURN QUERY 
+        SELECT 
+            books.book_id,
+            books.isbn,
+            books.title,
+            books.amhr_title,
+            books.authors,
+            books.synopsis,
+            books.amhr_synopsis,
+            books.genre,
+            books.publisher,
+            books.publication_date,
+            books.price,
+            books.is_hardcover,
+            books.average_rating,
+            books.quantity,
+            books.addition_tmstmp,
+            books.cover_page_urls
+        FROM
+            books
+        WHERE 
+            (pattern IS NULL OR
+             (books.authors ILIKE pattern OR
+              books.title ILIKE pattern OR
+              books.amhr_title ILIKE pattern))
+            AND (genre_param IS NULL OR
+                 (genre_param = ARRAY[]::TEXT[] OR
+                  books.genre = ANY (genre_param)))
+            AND books.is_deleted = FALSE;
+END;
+$$;
+
 
 -- Call the function like this:
--- SELECT * FROM retrieve_books('%t%');
+-- SELECT * FROM retrieve_books('t%', Array['genre1', 'genre2']);
 
 -- ================================================================================================================ 
 -- REMOVED - Delete book function - this is cause we can't delete files (coverpages) from the bucket using sql
@@ -258,4 +253,45 @@ CREATE OR REPLACE FUNCTION buy_books(
     END;
     $$;
     
+
+
+-- Get prioritized books by joining the books and prioritized_books table
+
+CREATE OR REPLACE FUNCTION retrieve_prioritized_books ()
+    RETURNS SETOF books
+    AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        books.*
+    FROM
+        books
+        JOIN prioritized_books ON books.book_id = prioritized_books.book_id
+    WHERE
+        books.is_deleted = FALSE;
+END;
+$$
+LANGUAGE plpgsql;
+
+
+
+-- Returns similar books based on the genre or author name
+-- The condition checks that the current book listed is not also shown in the 'Similar Books' Section
+CREATE OR REPLACE FUNCTION retrieve_similar_books(book_id_param INT DEFAULT -1, genre_param TEXT DEFAULT NULL, authors_param TEXT DEFAULT NULL)
+    RETURNS SETOF books
+    AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        books.*
+    FROM
+        books
+    WHERE (books.book_id != book_id_param) AND (books.is_deleted = FALSE) AND ((books.genre = genre_param)
+        OR (books.authors = authors_param));
+END;
+$$
+LANGUAGE plpgsql;
+
+
+
     

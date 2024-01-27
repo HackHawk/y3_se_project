@@ -1,3 +1,12 @@
+// TODO: MAKE PAGE SERVER SIDE
+// TODO: Identify which parts need to be client side and move this parts needing interactivity to their own components
+// TODO: We don't need useBooks, and useGenres. We can just call them in an async function. We can then put the thing we need on Suspense Boundary
+// TODO: Implement Server Side Pagination
+// TODO: Recommended Books and ShowBooks should be its own component with each fetching its own data.
+
+
+
+
 "use client";
 
 import { useState } from "react";
@@ -8,6 +17,7 @@ import CardSkeleton from "@/components/Skeleton/CardSkeleton";
 import BookList from "@/components/BookList/BookList";
 import useBooks from "@/hooks/useBooks";
 import useGenres from "@/hooks/useGenres";
+import useRecommendedBooks from "@/hooks/useRecommendedBooks";
 
 export default function page() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -16,6 +26,7 @@ export default function page() {
   const defaultPageSize = 10;
 
   const { books, loading } = useBooks(keywordFilter, genreFilter);
+  const {recommendedBooks} = useRecommendedBooks(); 
   const genres = useGenres();
 
   const handleSearch = (keyword, selectedGenres) => {
@@ -49,7 +60,7 @@ export default function page() {
             <CardSkeleton />
           </div>
         ) : (
-          <BookList books={renderBookList()} />
+          <BookList books={recommendedBooks} />
         )}
 
         <h2>Search results</h2>
