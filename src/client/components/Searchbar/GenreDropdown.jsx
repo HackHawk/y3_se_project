@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { Select, SelectItem, Chip, Button } from "@nextui-org/react";
+import { Select, SelectItem } from "@nextui-org/react";
 
 const GenreDropdown = ({ selectedGenres, setSelectedGenres, genres}) => {
 
@@ -14,8 +13,8 @@ const GenreDropdown = ({ selectedGenres, setSelectedGenres, genres}) => {
         onSelectionChange={setSelectedGenres}
       >
         {genres.map((genre, index) => (
-          <SelectItem key={index} value={genre}>
-            {genre.genre}
+          <SelectItem key={index} value={genre.genre_name}>
+            {genre.genre_name}
           </SelectItem>
         ))}
       </Select>

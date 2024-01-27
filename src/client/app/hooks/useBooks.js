@@ -8,19 +8,9 @@ const useBooks = (keywordFilter, genreFilter) => {
   useEffect(() => {
     async function fetchBooks() {
       setLoading(true);
+      
       try {
-        let query = supabase.from("books").select();
-
-        if (keywordFilter) {
-          const condition = `title.ilike.${keywordFilter}%,authors.ilike.%${keywordFilter}%, amhr_title.ilike.${keywordFilter}%`;
-          query = query.or(condition);
-        }
-
-        if (genreFilter.length > 0) {
-          query = query.in("genre", genreFilter);
-        }
-
-        const { data, error } = await query;
+        const { data, error } = await await supabase.rpc('retrieve_books', { pattern: `${keywordFilter}%`, genre_param: genreFilter });
         if (error) throw error;
         setBooks(data);
       } catch (error) {
