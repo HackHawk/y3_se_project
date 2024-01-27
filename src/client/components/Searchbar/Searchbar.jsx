@@ -11,7 +11,7 @@ const Searchbar = ({ handleSearch, genres }) => {
     e.preventDefault();
     selectedGenresWithoutIndex = [];
     selectedGenres.forEach((index) =>
-      selectedGenresWithoutIndex.push(genres[index].genre)
+      selectedGenresWithoutIndex.push(genres[index].genre_name)
     );
     handleSearch(inputValue, selectedGenresWithoutIndex);
   };
@@ -23,13 +23,12 @@ const Searchbar = ({ handleSearch, genres }) => {
   return (
     <div>
       <form onSubmit={handleSumbit}>
-        <div className="flex gap-2 flex-row max-w-xl items-center mt-5">
+        <div className="flex gap-2 max-w-xl flex-col items-start mt-5 md:flex-row md:items-center">
           <Input
             isClearable
             type="text"
             variant="bordered"
             placeholder="Search books by title and authors"
-            labelPlacement={"outside-left"}
             onClear={() => setInputValue("")}
             value={inputValue}
             onChange={handleInputChange}

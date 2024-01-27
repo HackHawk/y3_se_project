@@ -14,7 +14,7 @@ import {
 import { useState } from 'react';
 import UserDropdown from './UserDropdown.jsx';
 
-const DisplayNavbar = () => {
+function DisplayNavbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const menuItems = ['Profile', 'Log Out'];
@@ -67,6 +67,6 @@ const DisplayNavbar = () => {
       </NavbarMenu>
     </Navbar>
   );
-};
+}
 
 export default DisplayNavbar;
