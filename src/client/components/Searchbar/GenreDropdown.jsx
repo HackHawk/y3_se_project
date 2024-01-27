@@ -1,14 +1,13 @@
-import { Select, SelectItem } from "@nextui-org/react";
+import { Select, SelectItem } from '@nextui-org/react';
 
-const GenreDropdown = ({ selectedGenres, setSelectedGenres, genres}) => {
-
+const GenreDropdown = ({ selectedGenres, setSelectedGenres, genres }) => {
   return (
     <>
       <Select
-        label="Filter Genre"
-        placeholder="Select genres"
-        selectionMode="multiple"
-        className="w-72"
+        label='Filter Genre'
+        placeholder='Select genres'
+        selectionMode='multiple'
+        className='w-72'
         selectedKeys={selectedGenres}
         onSelectionChange={setSelectedGenres}
       >

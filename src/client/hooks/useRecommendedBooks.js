@@ -7,18 +7,20 @@ const useRecommendedBooks = () => {
   useEffect(() => {
     async function fetchRecommendedBooks() {
       try {
-        const { data, error } = await supabase.rpc("retrieve_prioritized_books");
+        const { data, error } = await supabase.rpc(
+          'retrieve_prioritized_books'
+        );
         if (error) throw error;
         setRecommendedBooks(data);
       } catch (error) {
-        console.error("Error in fetching recommended books:", error);
+        console.error('Error in fetching recommended books:', error);
       }
     }
 
     fetchRecommendedBooks();
   }, []);
 
-  return {recommendedBooks};
+  return { recommendedBooks };
 };
 
 export default useRecommendedBooks;
