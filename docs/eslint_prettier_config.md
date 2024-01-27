@@ -104,8 +104,8 @@ You are going to follow the steps for **_BOTH_** `./src/admin` and `./src/client
     "object-shorthand": "off",
     "class-methods-use-this": "off",
     "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
-    "import/no-unresolved": "off",
-    "import/extensions": ["off", "never"]
+    "import/extensions": "off",
+    "import/no-unresolved": "off"
   }
 }
 ```

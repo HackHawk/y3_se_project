@@ -1,12 +1,14 @@
 'use client';
 
+// CONSIDER Adding a second passowrd input field that asks you to match the new password.
+
 import { Button } from '@nextui-org/react';
 import { useState } from 'react';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/navigation';
 import { toast, ToastContainer } from 'react-toastify';
 
-export default function page() {
+export default function Page() {
   const [newPassword, setNewPassword] = useState('');
   const router = useRouter();
 
