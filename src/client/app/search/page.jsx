@@ -80,7 +80,7 @@ export default function page() {
 
       {/* Display Pagination */}
       {books.length >= 1 && (
-        <div className='items-center'>
+        <div className='items-center mx-auto'>
           <DisplayPagination
             totalItems={books.length}
             itemsPerPage={defaultPageSize}

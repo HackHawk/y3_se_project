@@ -30,7 +30,7 @@ const DisplayPagination = ({
   }
 
   return (
-    <div>
+    <div className='flex justify-center'>
       <Pagination
         isCompact
         showControls
@@ -40,9 +40,10 @@ const DisplayPagination = ({
         onChange={(e) => {
           changePage(e);
         }}
-        className='m-auto w-full'
+        size='lg'
       />
     </div>
+    
   );
 };
 

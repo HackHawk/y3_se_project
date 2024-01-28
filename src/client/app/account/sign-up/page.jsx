@@ -51,8 +51,6 @@ export default function SignUp() {
   async function handleSignUp(e) {
     e.preventDefault();
 
-    router.push('/');
-
     try {
       const {
         data: { user },
