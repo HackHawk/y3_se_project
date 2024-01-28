@@ -191,8 +191,6 @@ Here are the tests for delete_user and insert_book, rewritten to resemble the fo
             2. Call `buy_books(customer_id, nonexistent_book_id, 2)`.
         - **EXPECTED BEHAVIOR:**
             1. Clear exception indicating invalid book ID.
-        - **POSSIBLE IMPROVEMENT:**
-            - [ ] Verify error message clarity for understanding the issue.
 
 **3. Availability Checks**
     - **Test 5: Insufficient Quantity**

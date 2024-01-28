@@ -9,7 +9,7 @@
 --         data: {
 --             first_name: "Arataka",
 --             last_name: "Reigen",
---             frontend: "CUSTOMER" // This part is important.
+--             frontend: "CUSTOMER" // (ADMIN) This part is important. 
 --         }
 --     }
 -- });

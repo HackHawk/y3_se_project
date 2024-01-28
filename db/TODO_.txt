@@ -1,0 +1,5 @@
+- These are meant to be implemented using edge functions
+
+TO DO (NOT YET) function that refreshes ratings every x seconds
+TO DO (NOT YET) function that deletes coverpages? - might be better to do this using clientside js.
+

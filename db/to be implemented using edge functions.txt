@@ -1,2 +1,0 @@
-- function that refreshes ratings every x seconds
-- function that deletes coverpages? - might be better to do this using clientside js.
