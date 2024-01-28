@@ -1,5 +1,5 @@
-import { createMiddlewareClient } from "@supabase/auth-helpers-nextjs";
-import { NextResponse } from "next/server";
+import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
+import { NextResponse } from 'next/server';
 
 export async function middleware(req) {
   const res = NextResponse.next();
@@ -16,14 +16,18 @@ export async function middleware(req) {
 
   if (user) {
     // const accountPathRegex = /^\/admin(\/|$)/; // Matches "/admin" and any subpath like "/admin/subpath"
-    if (path === "/") {
-      return NextResponse.redirect(new URL("/admin", req.url));
+    if (path === '/') {
+      return NextResponse.redirect(new URL('/admin', req.url));
     }
   }
 
   if (!user) {
-    if (path !== "/" && path !=="/account/forgot-password" && path !== "/account/update-password") {
-      return NextResponse.redirect(new URL("/", req.url));
+    if (
+      path !== '/' &&
+      path !== '/account/forgot-password' &&
+      path !== '/account/update-password'
+    ) {
+      return NextResponse.redirect(new URL('/', req.url));
     }
   }
 
@@ -40,6 +44,6 @@ export const config = {
      * - favicon.ico (favicon file)
      * Feel free to modify this pattern to include more paths.
      */
-    "/((?!_next/static|_next/image|favicon.ico).*)",
+    '/((?!_next/static|_next/image|favicon.ico).*)',
   ],
 };

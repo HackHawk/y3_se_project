@@ -8,13 +8,17 @@ const useBooks = (keywordFilter, genreFilter) => {
   useEffect(() => {
     async function fetchBooks() {
       setLoading(true);
-      
+
       try {
-        const { data, error } = await supabase.rpc('retrieve_books', { pattern: `${keywordFilter}%`, genre_param: genreFilter });
+
+        const { data, error } = await await supabase.rpc('retrieve_books', {
+          pattern: `${keywordFilter}%`,
+          genre_param: genreFilter,
+        });
         if (error) throw error;
         setBooks(data);
       } catch (error) {
-        console.error("Error in fetching books:", error);
+        console.error('Error in fetching books:', error);
       } finally {
         setLoading(false);
       }

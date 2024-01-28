@@ -6,24 +6,22 @@ import {
   DropdownMenu,
   DropdownTrigger,
   NavbarItem,
-} from "@nextui-org/react";
+} from '@nextui-org/react';
 
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { useRouter } from "next/navigation";
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { useRouter } from 'next/navigation';
 
 const UserDropdown = () => {
   const router = useRouter();
-
-
 
   const supabase = createClientComponentClient();
 
   const handleSignOut = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) {
-      alert("Error Signing Out. Try again");
+      alert('Error Signing Out. Try again');
     }
-    router.push("/")
+    router.push('/');
   };
 
   return (
@@ -56,10 +54,9 @@ const UserDropdown = () => {
     //   </DropdownMenu>
     // </Dropdown>
 
-    <Button onClick={handleSignOut} color="danger">
+    <Button onClick={handleSignOut} color='danger'>
       Sign out
     </Button>
-
   );
 };
 

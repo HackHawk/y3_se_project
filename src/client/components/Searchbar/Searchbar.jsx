@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { Button, Input } from "@nextui-org/react";
-import { SearchIcon } from "../Icons/SearchIcon";
-import GenreDropdown from "./GenreDropdown";
+import React, { useState } from 'react';
+import { Button, Input } from '@nextui-org/react';
+import { SearchIcon } from '../Icons/SearchIcon';
+import GenreDropdown from './GenreDropdown';
 const Searchbar = ({ handleSearch, genres }) => {
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState('');
   const [selectedGenres, setSelectedGenres] = useState([]);
   let selectedGenresWithoutIndex;
 
@@ -23,18 +23,18 @@ const Searchbar = ({ handleSearch, genres }) => {
   return (
     <div>
       <form onSubmit={handleSumbit}>
-        <div className="flex gap-2 max-w-xl flex-col items-start mt-5 md:flex-row md:items-center">
+        <div className='mt-5 flex max-w-xl flex-col items-start gap-2 md:flex-row md:items-center'>
           <Input
             isClearable
-            type="text"
-            variant="bordered"
-            placeholder="Search books by title and authors"
-            onClear={() => setInputValue("")}
+            type='text'
+            variant='bordered'
+            placeholder='Search books by title and authors'
+            onClear={() => setInputValue('')}
             value={inputValue}
             onChange={handleInputChange}
-            className="max-w-fit shrink"
+            className='max-w-fit shrink'
             startContent={
-              <SearchIcon className="text-black/50 mb-0.5 dark:text-white/90 text-slate-400 pointer-events-none flex-shrink-0" />
+              <SearchIcon className='pointer-events-none mb-0.5 flex-shrink-0 text-black/50 text-slate-400 dark:text-white/90' />
             }
           />
           <GenreDropdown
@@ -44,13 +44,13 @@ const Searchbar = ({ handleSearch, genres }) => {
           />
 
           <Button
-            type="submit"
-            size="lg"
-            radius="sm"
-            variant="solid"
-            className="items-center bg-orange-700"
+            type='submit'
+            size='lg'
+            radius='sm'
+            variant='solid'
+            className='items-center bg-orange-700'
           >
-            <SearchIcon color="white"/>
+            <SearchIcon color='white' />
           </Button>
         </div>
       </form>

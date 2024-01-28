@@ -7,11 +7,13 @@ const useGenres = () => {
   useEffect(() => {
     async function fetchGenres() {
       try {
-        const { data: genresData, error } = await supabase.from("genres").select();
+        const { data: genresData, error } = await supabase
+          .from('genres')
+          .select();
         if (error) throw error;
         setGenres(genresData);
       } catch (error) {
-        console.error("Error in fetching genres:", error);
+        console.error('Error in fetching genres:', error);
       }
     }
 

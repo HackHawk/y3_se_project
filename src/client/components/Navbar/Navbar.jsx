@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from 'react';
 import {
   Navbar,
   NavbarBrand,
@@ -9,95 +9,94 @@ import {
   Link,
   Button,
   Badge,
+  Image,
   Avatar,
   DropdownItem,
   DropdownTrigger,
   Dropdown,
   DropdownMenu,
-} from "@nextui-org/react";
-import { NavbarMenuToggle, NavbarMenu } from "@nextui-org/react";
-import { CartIcon } from "../Icons/CartIcon";
+  NavbarMenuToggle,
+  NavbarMenu,
+} from '@nextui-org/react';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { useRouter } from 'next/navigation';
+import { CartIcon } from '../Icons/CartIcon';
 
-const DisplayNavbar = () => {
+export default function DisplayNavbar() {
+  const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
 
   return (
     <Navbar
       onMenuOpenChange={setIsMenuOpen}
       isMenuOpen={isMenuOpen}
-      className=" bg-amber-700/50 rounded flex items-center"
+      className=' flex items-center rounded bg-amber-700/50'
     >
-      <NavbarContent>
-        <NavbarBrand className="flex flex-row gap-2">
-          <img src="Eneho_books_logo.png" alt="Bookstore logo" />
-          <p className="font-bold text-xl">እነሆ መጻሕፍት</p>
-        </NavbarBrand>
-      </NavbarContent>
+      <NavbarBrand className='flex flex-row gap-2'>
+        <Image src='/Eneho_books_logo.png' alt='Bookstore logo' width={70} />
+        <p className='text-xl font-bold'>እነሆ መጻሕፍት</p>
+      </NavbarBrand>
 
-      <div className="flex flex-row gap-5">
-        <Badge color="danger" content={50} shape="circle">
-          <Button
-            radius="full"
-            isIconOnly
-            aria-label="more than 99 notifications"
-            variant="light"
-          >
-            <CartIcon size={30} />
-          </Button>
-        </Badge>
+      <NavbarContent className='flex flex-row gap-5'>
+        {/* TODO modify this when users add/remove items to/from cart  */}
 
-        <NavbarContent as="div" justify="end">
-          <Dropdown placement="bottom-end">
+        <NavbarContent as='div' justify='end'>
+          <Badge color='danger' content={50} shape='circle'>
+            <Button
+              radius='full'
+              isIconOnly
+              aria-label='more than 99 notifications'
+              variant='light'
+            >
+              <CartIcon size={30} />
+            </Button>
+          </Badge>
+          <Dropdown placement='bottom-end'>
             <DropdownTrigger>
               <Avatar
                 isBordered
-                as="button"
-                className="transition-transform"
-                color="secondary"
-                name="Test User"
-                size="sm"
-                src=""
+                as='button'
+                className='transition-transform'
+                color='secondary'
+                name='Test User'
+                size='sm'
+                src=''
               />
             </DropdownTrigger>
-            <DropdownMenu aria-label="Profile Actions" variant="flat">
-              <DropdownItem key="profile" className="h-14 gap-2">
-                <p className="font-semibold">Signed in as</p>
-                <p className="font-semibold">test@example.com</p>
+            <DropdownMenu aria-label='Profile Actions' variant='flat'>
+              {/* FIXME  add menu options that depend on whether the user is logged in. */}
+              <DropdownItem key='sign-in'>
+                <div className='font'>
+                  {(currentUser && (
+                    <p className='font-semibold'>
+                      Signed in as {currentUser.email}
+                    </p>
+                  )) || (
+                    <Link color='foreground' href='/account/sign-in'>
+                      Sign in
+                    </Link>
+                  )}
+                </div>
               </DropdownItem>
-              <DropdownItem key="settings">My Settings</DropdownItem>
-              <DropdownItem key="team_settings">Change Username</DropdownItem>
-              <DropdownItem key="analytics">Analytics</DropdownItem>
-              <DropdownItem key="logout" color="danger">
+              <DropdownItem key='sign-up'>
+                <Link color='foreground' href='/account/sign-pu'>
+                  Sign up
+                </Link>
+              </DropdownItem>
+              {/* FIXME settings option is not the same size as the others. */}
+              <DropdownItem key='settings'>Account Settings</DropdownItem>
+              <DropdownItem key='logout' color='danger'>
                 Log Out
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>
         </NavbarContent>
-      </div>
+      </NavbarContent>
       <NavbarMenuToggle
-        aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-        className="sm:hidden"
+        aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+        className='sm:hidden'
       />
-
-      <NavbarMenu>
-        <NavbarItem>
-          <Link color="foreground" href="#">
-            Home
-          </Link>
-        </NavbarItem>
-        <NavbarItem isActive>
-          <Link href="#" aria-current="page">
-          Search Books
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link color="foreground" href="#">
-            Latest Books
-          </Link>
-        </NavbarItem>
-      </NavbarMenu>
     </Navbar>
   );
-};
-
-export default DisplayNavbar;
+}
