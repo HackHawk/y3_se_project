@@ -10,7 +10,7 @@ const useBooks = (keywordFilter, genreFilter) => {
       setLoading(true);
       
       try {
-        const { data, error } = await supabase.rpc('retrieve_books', { pattern: `${keywordFilter}%`, genre_param: genreFilter });
+        const { data, error } = await await supabase.rpc('retrieve_books', { pattern: `${keywordFilter}%`, genre_param: genreFilter });
         if (error) throw error;
         setBooks(data);
       } catch (error) {

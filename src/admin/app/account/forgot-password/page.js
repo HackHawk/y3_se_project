@@ -16,7 +16,7 @@ const page = () => {
 
     try {
       await supabase.auth.resetPasswordForEmail(e.target.email.value, {
-        redirectTo: "http://localhost:3000/account/update-password",
+        redirectTo: `${process.env.REDIRECT_URL_FOR_FORGOT_PASSWORD}/account/update-password`,
       });
 
     } catch (error) {

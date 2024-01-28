@@ -44,6 +44,20 @@ export default function LoginPage() {
     }
   }
 
+  useEffect(() => async function createAdminAccount() {
+    const {data, error} = await supabase.auth.signUp({
+      email: 'hdessie250@gmail.com',
+      password: 'test',
+      options: {
+        data: {
+          first_name: 'Abebe',
+          last_name: 'Beso',
+          frontend: 'ADMIN'
+        }
+      }
+    })
+  }, []);
+
 
   const handleSignIn = async (e) => {
     e.preventDefault();

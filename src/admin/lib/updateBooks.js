@@ -2,7 +2,9 @@
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 
-export async function addBooks(formData) {
+export async function updateBooks(formData, bookId) {
+
+    console.log(formData)
   // Extracting values from formData
   const title = formData.get("title");
   const titleAmharic = formData.get("titleAmharic");
@@ -37,9 +39,10 @@ export async function addBooks(formData) {
   }
 
   // Validating ISBN
-  if (isbn && (isbn.length != 10 || isbn.length != 13)) {
+if (isbn && !(isbn.length === 10 || isbn.length === 13)) {
     return { message: "Invalid ISBN. It should be 10 or 13 characters long." };
-  }
+}
+
 
   // Typecasting it here because I want the length property of the string to validate it
   isbn = parseInt(formData.get("isbn"), 10);
@@ -64,14 +67,12 @@ export async function addBooks(formData) {
   const cookieStore = cookies();
   const supabase = createServerComponentClient({ cookies: () => cookieStore });
 
-  // Use the JS library to create a bucket.
-
   if (isbn) {
     const { data: isbnList, error } = await supabase
       .from("books")
       .select("isbn");
     for (let i = 0; i < isbnList.length; i++) {
-      if (isbn === isbnList[i].isbn) {
+      if ((isbn === isbnList[i].isbn) && (isbnList[i] !== bookId.isbn)) {
         return { message: "ISBN already exists in catalogue" };
       }
     }
@@ -88,50 +89,48 @@ export async function addBooks(formData) {
   }
 
   // Handling File Upload
-  const coverPageUrl = [];
-  if (files && files.length > 0) {
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      const fileExtension = file.name.split(".").pop();
-      const fileName = `${title}-${Date.now()}`;
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from("coverpages")
-        .upload(fileName, file);
+//   const coverPageUrl = [];
+//   if (files && files.length > 0) {
+//     for (let i = 0; i < files.length; i++) {
+//       const file = files[i];
+//       const fileExtension = file.name.split(".").pop();
+//       const fileName = `${title}-${Date.now()}`;
+//       const { data: uploadData, error: uploadError } = await supabase.storage
+//         .from("coverpages")
+//         .upload(fileName, file);
       
-      if (uploadError) {
-        console.error(uploadError);
-        return { message: "Error uploading file" };
-      }
-      coverPageUrl.push(uploadData.path);
-    }
-  }
+//       if (uploadError) {
+//         console.error(uploadError);
+//         return { message: "Error uploading file" };
+//       }
+//       coverPageUrl.push(uploadData.path);
+//     }
+//   }
 
-  console.log(coverPageUrl);
+//   console.log(coverPageUrl);
 
-  const { data, error } = await supabase.from("books").insert([
-    {
-      title: title,
-      amhr_title: titleAmharic,
-      isbn: isbn,
-      authors: author,
-      genre: genre,
-      synopsis: synopsis,
-      amhr_synopsis: synopsisAmharic,
-      publisher: publisher,
-      publication_date: publicationDate,
-      is_hardcover: printVersion,
-      quantity: quantity,
-      price: price,
-      cover_page_urls: coverPageUrl, // add the URL/path of the uploaded file
-    },
-  ]);
+  const { data, error } = await supabase.from("books").update({
+    title: title,
+    amhr_title: titleAmharic,
+    isbn: isbn,
+    authors: author,
+    genre: genre,
+    synopsis: synopsis,
+    amhr_synopsis: synopsisAmharic,
+    publisher: publisher,
+    publication_date: publicationDate,
+    is_hardcover: printVersion,
+    quantity: quantity,
+    price: price,
+    // cover_page_urls: coverPageUrl, // Assuming handling of cover page URLs is similar
+  }).eq("book_id", bookId); // Matching the book by ID for update
 
   if (error) {
-    console.error("Error Inserting Data", error);
-    return { message: error.message };
+    console.error("Error Updating Data", error);
+    return { message: error};
   }
 
   //   revalidatePath('/admin/manage-catalogue')
 
-  return { message: "success" };
+  return { message: error};
 }

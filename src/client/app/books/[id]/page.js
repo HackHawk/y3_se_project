@@ -9,8 +9,8 @@ import supabase from "@/lib/supabaseClient";
 // Dynamic paths not available should return 404 page
 export const dynamicParams = false;
 
-// Refresh the page after 600 seconds
-export const revalidate = 600; 
+// Refresh the page after 4 seconds
+export const revalidate = 4; 
 
 // The following paths are prerendered even before clicked.
 export async function generateStaticParams() {

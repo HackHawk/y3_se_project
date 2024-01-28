@@ -4,7 +4,7 @@ const adminLayout = ({ children }) => {
   return (
     <div suppressHydrationWarning>
     <DisplayNavbar />
-    <div>
+    <div className='px-5 md:px-12'>
         
         {children}
     </div>
