@@ -12,8 +12,8 @@ import DisplayPagination from '@/components/Pagination/Pagination';
 import Searchbar from '@/components/Searchbar/Searchbar';
 import CardSkeleton from '@/components/Skeleton/CardSkeleton';
 import BookList from '@/components/BookList/BookList';
-import useBooks from '@/lib/useBooks';
-import useGenres from '@/lib/useGenres';
+import useBooks from '@/hooks/useBooks';
+import useGenres from '@/hooks/useGenres';
 
 export default function page() {
   const [currentPage, setCurrentPage] = useState(1);
