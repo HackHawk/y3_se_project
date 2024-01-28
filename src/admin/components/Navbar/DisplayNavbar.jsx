@@ -41,7 +41,7 @@ function DisplayNavbar() {
           <Link href='#'>Home</Link>
         </NavbarItem>
         <NavbarItem>
-          <Link href='/admin/manage-catalogue' aria-current='page'>
+          <Link href="/admin/add-books" aria-current="page">
             Add Books
           </Link>
         </NavbarItem>

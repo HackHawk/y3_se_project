@@ -1,7 +1,6 @@
 "use server";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
-import supabaseClient from "./supabaseClient";
 
 export async function addBooks(formData) {
   // Extracting values from formData
@@ -129,7 +128,7 @@ export async function addBooks(formData) {
 
   if (error) {
     console.error("Error Inserting Data", error);
-    return { message: "Error Inserting Data" };
+    return { message: error.message };
   }
 
   //   revalidatePath('/admin/manage-catalogue')
