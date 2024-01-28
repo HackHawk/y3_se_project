@@ -1,6 +1,8 @@
 import DisplayNavbar from '@/components/Navbar/Navbar';
 import './globals.css';
 import Providers from './providers';
+import { CartProvider } from '@/components/Cart/contexts/CartContext';
+import Footer from '@/components/Footer/Footer';
 
 export const metadata = {
   title: 'Create Next App',
@@ -12,8 +14,11 @@ export default function RootLayout({ children }) {
     <html lang='en'>
       <body className=''>
         <Providers>
+          <CartProvider>
           <DisplayNavbar />
-          <div className='px-5 md:px-12'>{children}</div>
+          <div className=''>{children}</div>
+          <Footer />
+          </CartProvider>
         </Providers>
       </body>
     </html>

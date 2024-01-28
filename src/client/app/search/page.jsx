@@ -42,7 +42,7 @@ export default function page() {
   };
 
   return (
-    <div className='max-w-flex flex-col rounded-lg'>
+    <div className='max-w-flex flex-col rounded-lg px-16'>
       <Searchbar handleSearch={handleSearch} genres={genres} />
 
       <h1>Recommended Books</h1>

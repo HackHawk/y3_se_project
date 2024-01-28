@@ -3,6 +3,7 @@
 
 import BookCard from '@/components/BookCard/BookCard';
 import DisplayBookImages from '@/components/BookDetails/DisplayBookImages';
+import AddToCartButton from '@/components/Cart/AddToCartButton';
 import supabase from '@/lib/supabaseClient';
 
 // Dynamic paths not available should return 404 page
@@ -50,7 +51,7 @@ const page = async ({ params: { id } }) => {
 
   return (
     <>
-      <div className='mt-15 m-10 flex flex-col items-start gap-10 md:flex-row'>
+      <div className='mt-15 m-10 flex flex-col items-start gap-10 md:flex-row px-16'>
         {/* Image Container */}
         <DisplayBookImages book={book} />
 
@@ -97,12 +98,7 @@ const page = async ({ params: { id } }) => {
           </div>
 
           {/* Buy Now Button */}
-          <button
-            type='button'
-            className='mt-5 rounded-lg bg-blue-500 px-4 py-2 font-semibold text-white shadow-md transition duration-300 hover:bg-blue-700'
-          >
-            Add to Cart
-          </button>
+          <AddToCartButton book={book} />
         </div>
       </div>
 
