@@ -6,7 +6,7 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
-import isAdmin from './lib/isAdmin';
+import isAdmin from '../lib/isAdmin';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -44,7 +44,7 @@ export default function LoginPage() {
       });
 
       if (user) {
-        // RM
+        // REMOVE
         console.log(user);
         const adminStatus = await isAdmin(supabase);
 
@@ -54,7 +54,7 @@ export default function LoginPage() {
         } else {
           supabase.auth.signOut();
           setCurrentUser(null);
-          // RM
+          // REMOVE
           console.log(currentUser);
           throw new Error('You are not an admin');
         }

@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { toast, ToastContainer } from 'react-toastify';
 import { useRouter } from 'next/navigation';
-import isAdmin from '@/app/lib/isAdmin';
+import isAdmin from '@/lib/isAdmin';
 
 export default function ForgotPassword() {
   const router = useRouter();

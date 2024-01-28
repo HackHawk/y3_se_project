@@ -7,6 +7,17 @@ import Link from 'next/link'; // Use Next.js Link component
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/navigation';
 
+const toastParams = {
+  position: 'top-right',
+  autoClose: 2000,
+  hideProgressBar: false,
+  closeOnClick: true,
+  pauseOnHover: false,
+  draggable: true,
+  progress: undefined,
+  theme: 'light',
+};
+
 export default function SignUp() {
   const router = useRouter();
 
@@ -14,43 +25,72 @@ export default function SignUp() {
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [currentUser, setCurrentUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const supabase = createClientComponentClient();
-  // Handle sign up logic (replace with your implementation)
-  const handleSignUp = async (e) => {
-    e.preventDefault();
 
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          first_name: firstName,
-          last_name: lastName,
-          frontend: 'CUSTOMER',
-        },
-      },
-    });
+  useEffect(() => {
+    async function fetchExistingSession() {
+      // Fetches the currently logged in user from the existing session (if there is one)
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      setCurrentUser(user);
 
-    // REMOVE
-    console.log(error);
-    console.log(data);
+      if (user) {
+        router.push('/');
+      }
 
-    if (error) {
-      toast.error(error.message, {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-      });
+      setLoading(false);
     }
 
+    fetchExistingSession();
+  }, [supabase.auth, router]);
+
+  async function handleSignUp(e) {
+    e.preventDefault();
+
     router.push('/');
-  };
+
+    try {
+      const {
+        data: { user },
+        error,
+      } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            first_name: firstName,
+            last_name: lastName,
+            frontend: 'CUSTOMER',
+          },
+        },
+      });
+
+      if (user) {
+        // REMOVE
+        console.log(user);
+        toast.success('Signed up successfully', toastParams);
+        router.push('/');
+      } else {
+        throw error;
+      }
+    } catch (error) {
+      console.log('Error signing up: ', error);
+      toast.error(error.message, toastParams);
+    }
+  }
+
+  if (loading) {
+    return (
+      <Spinner
+        className='fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform'
+        size='lg'
+      />
+    );
+  }
 
   return (
     <main className='flex h-screen w-full flex-col items-center justify-center px-4'>

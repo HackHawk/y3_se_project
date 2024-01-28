@@ -27,6 +27,15 @@ export default function DisplayNavbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
 
+  const supabase = createClientComponentClient();
+
+  async function handleSignOut(e) {
+    e.preventDefault();
+    const { error } = await supabase.auth.signOut();
+
+    console.log(error);
+  }
+
   return (
     <Navbar
       onMenuOpenChange={setIsMenuOpen}
@@ -80,13 +89,17 @@ export default function DisplayNavbar() {
                 </div>
               </DropdownItem>
               <DropdownItem key='sign-up'>
-                <Link color='foreground' href='/account/sign-pu'>
+                <Link color='foreground' href='/account/sign-up'>
                   Sign up
                 </Link>
               </DropdownItem>
               {/* FIXME settings option is not the same size as the others. */}
               <DropdownItem key='settings'>Account Settings</DropdownItem>
-              <DropdownItem key='logout' color='danger'>
+              <DropdownItem
+                key='logout'
+                color='danger'
+                onClick={(e) => handleSignOut(e)}
+              >
                 Log Out
               </DropdownItem>
             </DropdownMenu>

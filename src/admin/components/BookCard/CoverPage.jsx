@@ -6,13 +6,13 @@ const CoverPage = ({ imageUrl }) => {
   const height = 200;
 
   return (
-    <div className="cover-page">
+    <div className='cover-page'>
       {imageUrl ? (
         <Image
           // loader={customLoader}
           src={imageUrl}
-          alt="Book Cover"
-          className="cover-image justify-center"
+          alt='Book Cover'
+          className='cover-image justify-center'
           width={width}
           height={height}
           unoptimized={process.env.NODE_ENV !== 'production'} // Optionally, use unoptimized in non-production environments
@@ -20,8 +20,8 @@ const CoverPage = ({ imageUrl }) => {
       ) : (
         <Image
           src={DefaultImage}
-          alt="Default Book Cover"
-          className="cover-image"
+          alt='Default Book Cover'
+          className='cover-image'
           width={width}
           height={height}
         />

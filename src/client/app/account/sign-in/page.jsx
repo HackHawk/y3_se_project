@@ -13,21 +13,65 @@ export default function SignIn() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState(null);
 
   const supabase = createClientComponentClient();
 
-  // Handle sign up logic (replace with your implementation)
-  const handleSignIn = async () => {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password,
-    });
+  useEffect(() => {
+    async function fetchExistingSession() {
+      // Fetches the currently logged in user from the existing session (if there is one)
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      setCurrentUser(user);
 
-    // REMOVE
-    console.log(data);
-    console.log(error);
+      if (user) {
+        router.push('/');
+      }
 
-    if (error) {
+      setLoading(false);
+    }
+
+    fetchExistingSession();
+  }, [supabase.auth, router]);
+
+  async function handleSignIn(e) {
+    e.preventDefault();
+
+    try {
+      const {
+        data: { user },
+        error,
+      } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      // REMOVE
+      console.log(user);
+      console.log(error);
+
+      if (user) {
+        // REMOVE
+        console.log(user);
+        const customerStatus = await isCustomer(supabase);
+
+        if (customerStatus === true) {
+          setCurrentUser(user);
+          router.push('/');
+        } else {
+          supabase.auth.signOut();
+          setCurrentUser(null);
+          // REMOVE
+          console.log(currentUser);
+          throw new Error('You are not a customer');
+        }
+      } else {
+        throw error;
+      }
+    } catch (error) {
+      console.log('Error signing in: ', error);
       toast.error(error.message, {
         position: 'top-right',
         autoClose: 2000,
@@ -39,9 +83,16 @@ export default function SignIn() {
         theme: 'light',
       });
     }
-    router.push('/');
-  };
+  }
 
+  if (loading) {
+    return (
+      <Spinner
+        className='fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform'
+        size='lg'
+      />
+    );
+  }
   return (
     <main className='flex h-screen w-full flex-col items-center justify-center px-4'>
       <div className='w-full max-w-sm text-gray-600'>
@@ -50,7 +101,7 @@ export default function SignIn() {
             Sign in to your account
           </h3>
         </div>
-        <form className='mt-8 space-y-5' onSubmit={handleSignIn}>
+        <form className='mt-8 space-y-5'>
           <div>
             <Input
               label='Email'
@@ -82,6 +133,7 @@ export default function SignIn() {
           <Button
             type='submit'
             className='w-full rounded-lg bg-amber-700 p-3 text-white hover:bg-gray-600 focus:outline-none'
+            onClick={(e) => handleSignIn(e)}
           >
             Sign In
           </Button>

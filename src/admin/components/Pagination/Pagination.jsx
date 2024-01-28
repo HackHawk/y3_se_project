@@ -1,5 +1,5 @@
-import React from "react";
-import { Pagination } from "@nextui-org/react";
+import React from 'react';
+import { Pagination } from '@nextui-org/react';
 
 const DisplayPagination = ({
   totalItems,
@@ -8,8 +8,6 @@ const DisplayPagination = ({
   onPageChange,
 }) => {
   const totalPages = Math.ceil(totalItems / itemsPerPage);
-
-  
 
   const changePage = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) {
@@ -24,7 +22,7 @@ const DisplayPagination = ({
       <span
         key={i}
         onClick={() => changePage(i)}
-        className={currentPage === i ? "underline mr-10" : "ml-10 no-underline"}
+        className={currentPage === i ? 'mr-10 underline' : 'ml-10 no-underline'}
       >
         {i}
       </span>
@@ -42,7 +40,7 @@ const DisplayPagination = ({
         onChange={(e) => {
           changePage(e);
         }}
-        className="m-auto w-full"
+        className='m-auto w-full'
       />
     </div>
   );

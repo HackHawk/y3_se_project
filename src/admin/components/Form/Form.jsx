@@ -3,7 +3,7 @@
 import { Select, SelectItem } from '@nextui-org/react';
 import { useState, useEffect } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
-import addBooks from '@/app/lib/addBooks';
+import addBooks from '@/lib/addBooks';
 
 function AddBooksForm() {
   // State to hold formData
